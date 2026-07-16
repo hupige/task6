@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>回归分析工具</title>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jstat@1.9.6/dist/jstat.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js">
+</script>
+<style>
+:root {
+  --blue: #2563EB; --blue-light: #DBEAFE; --blue-dark: #1D4ED8;
+  --green: #16A34A; --green-light: #DCFCE7;
+  --red: #DC2626; --red-light: #FEE2E2;
+  --orange: #F59E0B; --orange-light: #FEF3C7;
+  --bg: #F8FAFC; --card: #FFFFFF; --border: #E2E8F0;
+  --text: #1E293B; --text-secondary: #64748B; --text-muted: #94A3B8;
+  --radius: 10px; --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 6px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh;
+}
+
+/* ========== Header ========== */
+.app-header {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
+}
+.app-header h1 { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.app-header h1 .icon { font-size: 1.4rem; }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  border: 1px solid var(--border); border-radius: 8px; font-size: .875rem;
+  font-weight: 500; cursor: pointer; background: var(--card); color: var(--text);
+  transition: all .15s; white-space: nowrap;
+}
+.btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-primary:hover { background: var(--blue-dark); color: #fff; }
+.btn-sm { padding: 5px 10px; font-size: .8rem; }
+.btn:disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+.btn-ghost { border: none; background: transparent; }
+
+/* ========== Main Layout ========== */
+.main-container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+/* ========== Dropzone ========== */
+.dropzone-container { display: flex; justify-content: center; padding: 40px 24px; }
+.dropzone {
+  border: 3px dashed var(--border); border-radius: 16px;
+  padding: 64px 48px; text-align: center; cursor: pointer;
+  transition: all .25s; max-width: 560px; width: 100%;
+  background: var(--card);
+}
+.dropzone:hover, .dropzone.drag-over {
+  border-color: var(--blue); background: var(--blue-light);
+  transform: translateY(-2px); box-shadow: var(--shadow-lg);
+}
+.dropzone-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+.dropzone h2 { font-size: 1.35rem; margin-bottom: 8px; color: var(--text); }
+.dropzone p { color: var(--text-secondary); font-size: .9rem; }
+.dropzone .supported { margin-top: 16px; font-size: .78rem; color: var(--text-muted); }
+.dropzone input[type="file"] { display: none; }
+
+/* Mini dropzone in header */
+.mini-dropzone {
+  padding: 6px 14px; border: 2px dashed var(--border); border-radius: 8px;
+  cursor: pointer; font-size: .8rem; color: var(--text-secondary);
+  transition: all .15s; display: flex; align-items: center; gap: 6px;
+}
+.mini-dropzone:hover { border-color: var(--blue); color: var(--blue); }
+.mini-dropzone input[type="file"] { display: none; }
+
+/* ========== Card ========== */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.card-header { font-size: 1rem; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.card-header .badge { font-size: .75rem; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
+
+/* ========== Data Preview ========== */
+.data-preview-panel { display: none; }
+.data-summary { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.data-summary .stat-chip {
+  padding: 6px 12px; background: var(--bg); border-radius: 6px;
+  font-size: .82rem; color: var(--text-secondary);
+}
+.stat-chip strong { color: var(--text); margin-right: 4px; }
+.stat-chip.warn { background: var(--orange-light); color: #92400E; }
+
+.table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); max-height: 360px; overflow-y: auto; }
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: .82rem; white-space: nowrap; }
+.table-wrapper th {
+  position: sticky; top: 0; background: #F1F5F9; padding: 10px 12px;
+  text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); z-index: 1;
+}
+.table-wrapper td { padding: 8px 12px; border-bottom: 1px solid #F1F5F9; }
+.table-wrapper tr:hover td { background: #F8FAFC; }
+.table-wrapper .col-non-numeric { background: #FFF7ED; }
+.col-type-badge { font-size: .7rem; padding: 1px 6px; border-radius: 4px; margin-left: 6px; }
+.col-type-badge.num { background: var(--green-light); color: var(--green); }
+.col-type-badge.str { background: var(--red-light); color: var(--red); }
+
+/* ========== Variable Selection ========== */
+.var-select-panel { display: none; }
+.var-form { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; }
+.var-form .field { flex: 1; min-width: 200px; }
+.var-form label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
+.var-form select {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+  border-radius: 8px; font-size: .9rem; background: var(--card); cursor: pointer;
+}
+.var-form select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.multi-select {
+  border: 1px solid var(--border); border-radius: 8px; max-height: 180px;
+  overflow-y: auto; padding: 6px;
+}
+.multi-select label {
+  display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+  border-radius: 6px; cursor: pointer; font-size: .85rem; font-weight: 400; color: var(--text);
+}
+.multi-select label:hover { background: var(--blue-light); }
+.multi-select input[type="checkbox"] { accent-color: var(--blue); width: 16px; height: 16px; }
+.regression-type-indicator { font-size: .82rem; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
+.regression-type-indicator.ols { background: var(--blue-light); color: var(--blue); }
+.regression-type-indicator.logistic { background: #F3E8FF; color: #7C3AED; }
+
+/* ========== Results ========== */
+.results-panel { display: none; }
+
+/* Stats grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-box { background: var(--bg); border-radius: 8px; padding: 14px; text-align: center; }
+.stat-box .value { font-size: 1.5rem; font-weight: 700; color: var(--blue); }
+.stat-box .label { font-size: .75rem; color: var(--text-secondary); margin-top: 2px; }
+.stat-box.sig .value { color: var(--green); }
+
+/* Coefficient table */
+.coef-table-wrapper { overflow-x: auto; margin-bottom: 20px; }
+.coef-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.coef-table th { background: #F1F5F9; padding: 10px 14px; text-align: center; font-weight: 600; border-bottom: 2px solid var(--border); }
+.coef-table td { padding: 9px 14px; text-align: center; border-bottom: 1px solid #F1F5F9; }
+.coef-table .var-name { text-align: left; font-weight: 500; font-family: "SF Mono","Fira Code",monospace; }
+.coef-table .coef-pos { color: var(--red); font-weight: 600; } /* 涨红跌绿 */
+.coef-table .coef-neg { color: var(--green); font-weight: 600; }
+.coef-table .sig-star { font-weight: 700; }
+.coef-table .sig-3 { color: var(--red); }
+.coef-table .sig-2 { color: var(--red); }
+.coef-table .sig-1 { color: var(--orange); }
+.coef-table tr:hover td { background: #F8FAFC; }
+
+/* Diagnostics table */
+.diag-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.diag-table td { padding: 8px 14px; border-bottom: 1px solid #F1F5F9; }
+.diag-table td:first-child { font-weight: 500; width: 220px; color: var(--text-secondary); }
+.diag-table .diag-ok { color: var(--green); }
+.diag-table .diag-warn { color: var(--orange); }
+.diag-table .diag-bad { color: var(--red); font-weight: 600; }
+
+/* Confusion matrix */
+.confusion-matrix { display: inline-grid; grid-template-columns: auto auto auto; gap: 2px; font-size: .85rem; }
+.confusion-matrix .cm-cell { padding: 8px 16px; text-align: center; background: var(--bg); }
+.confusion-matrix .cm-header { font-weight: 600; background: #F1F5F9; }
+.confusion-matrix .cm-tp { background: var(--green-light); }
+.confusion-matrix .cm-tn { background: var(--green-light); }
+.confusion-matrix .cm-fp { background: var(--red-light); }
+.confusion-matrix .cm-fn { background: var(--red-light); }
+
+/* Charts grid */
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chart-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.chart-card.full-width { grid-column: 1 / -1; }
+.chart-card .chart-title { font-size: .9rem; font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.chart-card canvas { width: 100% !important; height: 360px !important; }
+.chart-download-btn { font-size: .75rem; color: var(--text-muted); cursor: pointer; border: none; background: none; padding: 2px 6px; border-radius: 4px; }
+.chart-download-btn:hover { color: var(--blue); background: var(--blue-light); }
+
+/* Loading */
+.loading-overlay { display: none; text-align: center; padding: 48px; }
+.spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+.tab { padding: 10px 20px; cursor: pointer; font-size: .88rem; font-weight: 500; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; padding: 12px 20px;
+  border-radius: 8px; font-size: .85rem; box-shadow: var(--shadow-lg);
+  z-index: 1000; animation: slideUp .3s ease-out;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.toast.show { opacity: 1; }
+.toast.info { background: #1E293B; color: #fff; }
+.toast.warn { background: var(--orange); color: #fff; }
+.toast.error { background: var(--red); color: #fff; }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Model type badge */
+.model-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: .78rem; font-weight: 600; }
+.model-badge.ols { background: var(--blue-light); color: var(--blue); }
+.model-badge.logistic { background: #F3E8FF; color: #7C3AED; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .charts-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .var-form { flex-direction: column; }
+  .app-header { padding: 10px 16px; }
+  .app-header h1 { font-size: 1.1rem; }
+  .main-container { padding: 16px; }
+}
+
+/* Collapsible section */
+.section-toggle { cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px; }
+.section-toggle .arrow { transition: transform .2s; font-size: .7rem; }
+.section-toggle.collapsed .arrow { transform: rotate(-90deg); }
+.section-content { transition: max-height .3s ease-out; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="app-header">
+  <h1><span class="icon">📊</span>回归分析工具</h1>
+  <div class="header-actions">
+    <button class="btn btn-sm" id="btnSample" title="加载示例数据">📥 示例数据</button>
+    <select id="encodingSelector" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:.78rem;background:var(--card);color:var(--text);cursor:pointer;">
+      <option value="auto">编码：自动检测</option>
+      <option value="UTF-8">UTF-8</option>
+      <option value="GBK">GBK (简体中文)</option>
+      <option value="GB2312">GB2312 (简体中文)</option>
+    </select>
+    <label class="mini-dropzone" id="miniDrop" title="拖放或点击上传 CSV">
+      📁 上传文件 <input type="file" id="fileInput" accept=".csv">
+    </label>
+  </div>
+</header>
+
+<div class="main-container">
+
+  <!-- State 1: Dropzone -->
+  <div class="dropzone-container" id="dropzoneContainer">
+    <div class="dropzone" id="dropzone">
+      <span class="dropzone-icon">📂</span>
+      <h2>拖放 CSV 文件到这里</h2>
+      <p>或点击此区域选择文件上传</p>
+      <p class="supported">支持 .csv 格式，自动检测编码</p>
+    </div>
+  </div>
+
+  <!-- State 2: Data Preview + Variable Selection -->
+  <div class="data-preview-panel" id="dataPreviewPanel">
+    <div class="card">
+      <div class="card-header">📋 数据预览 <span class="badge" id="rowCountBadge" style="background:var(--blue-light);color:var(--blue);">0 行</span></div>
+      <div class="data-summary" id="dataSummary"></div>
+      <div class="table-wrapper"><table><thead id="previewTableHead"></thead><tbody id="previewTableBody"></tbody></table></div>
+    </div>
+  </div>
+
+  <div class="var-select-panel" id="varSelectPanel">
+    <div class="card">
+      <div class="card-header">🎯 变量选择 <span class="regression-type-indicator ols" id="regTypeIndicator">OLS 线性回归</span></div>
+      <div class="var-form">
+        <div class="field">
+          <label for="depSelect">因变量 Y</label>
+          <select id="depSelect"><option value="">-- 请选择 --</option></select>
+        </div>
+        <div class="field" style="flex:2">
+          <label>自变量 X（可多选）</label>
+          <div class="multi-select" id="indepSelect"></div>
+        </div>
+        <div class="field" style="flex:0 0 auto; min-width:120px;">
+          <button class="btn btn-primary" id="btnAnalyze" disabled>🚀 开始分析</button>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:.8rem;color:var(--text-muted);" id="varHint"></div>
+    </div>
+  </div>
+
+  <!-- State 3: Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p style="color:var(--text-secondary);">正在计算回归模型...</p>
+  </div>
+
+  <!-- State 4: Results -->
+  <div class="results-panel" id="resultsPanel">
+    <!-- Model Summary -->
+    <div class="card" id="summaryCard">
+      <div class="section-toggle" id="summaryToggle"><span class="arrow">▼</span>📊 模型摘要</div>
+      <div class="section-content" id="summaryContent">
+        <div class="stats-grid" id="statsGrid"></div>
+      </div>
+    </div>
+
+    <!-- Coefficient Table -->
+    <div class="card" id="coefCard">
+      <div class="section-toggle" id="coefToggle"><span class="arrow">▼</span>📋 回归系数表 <button class="btn btn-sm" id="btnExportCoef" style="margin-left:12px;">⬇ 导出 CSV</button></div>
+      <div class="section-content" id="coefContent">
+        <div class="coef-table-wrapper"><table class="coef-table" id="coefTable"></table></div>
+      </div>
+    </div>
+
+    <!-- Diagnostics -->
+    <div class="card" id="diagCard">
+      <div class="section-toggle" id="diagToggle"><span class="arrow">▼</span>🔍 模型诊断</div>
+      <div class="section-content" id="diagContent">
+        <table class="diag-table" id="diagTable"></table>
+      </div>
+    </div>
+
+    <!-- Logistic-specific: Confusion Matrix & Metrics -->
+    <div class="card" id="logisticMetricsCard" style="display:none;">
+      <div class="card-header">🎯 分类性能指标</div>
+      <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+        <div id="confusionMatrixContainer"></div>
+        <div>
+          <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);" id="classMetricsGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid" id="chartsGrid"></div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Encoding selector modal -->
+<div id="encodingModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border-radius:12px;padding:24px;max-width:360px;width:90%;text-align:center;">
+    <h3 style="margin-bottom:12px;">⚠️ 编码检测失败</h3>
+    <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:16px;">自动编码检测未能识别文件编码，请手动选择：</p>
+    <select id="encodingSelect" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;margin-bottom:16px;">
+      <option value="UTF-8">UTF-8</option>
+      <option value="GBK">GBK (简体中文)</option>
+      <option value="GB2312">GB2312 (简体中文)</option>
+    </select>
+    <button class="btn btn-primary" id="btnRetryEncoding">重新解析</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CDN LOAD CHECK
+// ============================================================
+(function checkDeps() {
+  const missing = [];
+  if (typeof Papa === 'undefined') missing.push('Papa Parse');
+  if (typeof jStat === 'undefined') missing.push('jStat');
+  if (typeof Chart === 'undefined') missing.push('Chart.js');
+  if (missing.length > 0) {
+    document.body.innerHTML = `<div style="padding:40px;text-align:center;color:#DC2626;font-family:sans-serif;">
+      <h2>⚠️ 依赖库加载失败</h2>
+      <p>以下 CDN 库未能加载：${missing.join('、')}</p>
+      <p style="color:#64748B;">请检查网络连接后刷新页面重试</p>
+    </div>`;
+    throw new Error('CDN load failed: ' + missing.join(', '));
+  }
+  console.log('✅ 依赖库加载成功: Papa Parse, jStat, Chart.js');
+})();
+
+// ============================================================
+// MATRIX UTILITIES
+// ============================================================
+const Matrix = {
+  transpose(A) {
+    const rows = A.length, cols = A[0].length;
+    const T = Array.from({length: cols}, () => new Array(rows));
+    for (let i = 0; i < rows; i++)
+      for (let j = 0; j < cols; j++)
+        T[j][i] = A[i][j];
+    return T;
+  },
+
+  multiply(A, B) {
+    const m = A.length, n = A[0].length, p = B[0].length;
+    const C = Array.from({length: m}, () => new Array(p).fill(0));
+    for (let i = 0; i < m; i++)
+      for (let k = 0; k < n; k++)
+        if (A[i][k] !== 0)
+          for (let j = 0; j < p; j++)
+            C[i][j] += A[i][k] * B[k][j];
+    return C;
+  },
+
+  multiplyVec(A, v) {
+    const m = A.length, n = A[0].length;
+    const r = new Array(m).fill(0);
+    for (let i = 0; i < m; i++)
+      for (let j = 0; j < n; j++)
+        r[i] += A[i][j] * v[j];
+    return r;
+  },
+
+  inverse(A) {
+    const n = A.length;
+    const aug = A.map((row, i) => {
+      const r = [...row];
+      for (let j = 0; j < n; j++) r.push(i === j ? 1 : 0);
+      return r;
+    });
+
+    for (let col = 0; col < n; col++) {
+      let maxRow = col, maxVal = Math.abs(aug[col][col]);
+      for (let row = col + 1; row < n; row++) {
+        const v = Math.abs(aug[row][col]);
+        if (v > maxVal) { maxVal = v; maxRow = row; }
+      }
+      if (maxVal < 1e-14) throw new Error('矩阵不可逆（可能存在完美多重共线性）');
+      if (maxRow !== col) [aug[col], aug[maxRow]] = [aug[maxRow], aug[col]];
+
+      const pivot = aug[col][col];
+      for (let j = 0; j < 2 * n; j++) aug[col][j] /= pivot;
+
+      for (let row = 0; row < n; row++) {
+        if (row === col) continue;
+        const factor = aug[row][col];
+        for (let j = 0; j < 2 * n; j++) aug[row][j] -= factor * aug[col][j];
+      }
+    }
+
+    return aug.map(row => row.slice(n));
+  },
+
+  diag(M) {
+    return M.map((row, i) => row[i]);
+  },
+
+  // Correlation matrix of columns
+  corrMatrix(data) {
+    const n = data.length, p = data[0].length;
+    const means = new Array(p).fill(0);
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < p; j++) means[j] += data[i][j] / n;
+
+    const sds = new Array(p).fill(0);
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < p; j++) sds[j] += (data[i][j] - means[j]) ** 2;
+    for (let j = 0; j < p; j++) sds[j] = Math.sqrt(sds[j] / (n - 1));
+
+    const R = Array.from({length: p}, () => new Array(p).fill(0));
+    for (let a = 0; a < p; a++) {
+      R[a][a] = 1;
+      for (let b = a + 1; b < p; b++) {
+        let cov = 0;
+        for (let i = 0; i < n; i++)
+          cov += (data[i][a] - means[a]) * (data[i][b] - means[b]);
+        cov /= (n - 1);
+        R[a][b] = R[b][a] = cov / (sds[a] * sds[b] || 1);
+      }
+    }
+    return R;
+  }
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  rawData: null,       // array of objects from CSV
+  headers: [],         // column names
+  numericCols: [],     // names of numeric columns
+  depVar: null,        // selected dependent variable
+  indepVars: [],       // selected independent variables
+  regressionType: 'ols', // 'ols' | 'logistic'
+  results: null,       // regression results object
+  charts: {},          // Chart.js instances
+  originalFile: null   // for re-parse on encoding change
+};
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const $ = id => document.getElementById(id);
+const dropzone = $('dropzone');
+const dropzoneContainer = $('dropzoneContainer');
+const dataPreviewPanel = $('dataPreviewPanel');
+const varSelectPanel = $('varSelectPanel');
+const loadingOverlay = $('loadingOverlay');
+const resultsPanel = $('resultsPanel');
+const fileInput = $('fileInput');
+const miniDrop = $('miniDrop');
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg, type = 'info') {
+  const el = $('toast');
+  el.textContent = msg;
+  el.className = 'toast ' + type + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ============================================================
+// CSV HANDLING
+// ============================================================
+function detectEncoding(text) {
+  // Check for BOM
+  if (text.charCodeAt(0) === 0xFEFF) return 'UTF-8';
+  // Quick heuristic: count high bytes
+  let highBytes = 0, total = Math.min(text.length, 4000);
+  for (let i = 0; i < total; i++) {
+    if (text.charCodeAt(i) > 127) highBytes++;
+  }
+  if (highBytes / total < 0.02) return 'UTF-8';
+  // Try to decode as GBK — if we got here, the file was read as UTF-8
+  // and high-byte chars suggest it's actually GBK
+  return 'GBK';
+}
+
+function readFileAsText(file, encoding) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = () => reject(new Error('文件读取失败'));
+    if (encoding && encoding !== 'UTF-8') {
+      // For non-UTF8, read as binary then decode
+      const r2 = new FileReader();
+      r2.onload = function(e) {
+        const arr = new Uint8Array(e.target.result);
+        const decoder = new TextDecoder(encoding);
+        resolve(decoder.decode(arr));
+      };
+      r2.onerror = () => reject(new Error('文件读取失败'));
+      r2.readAsArrayBuffer(file);
+    } else {
+      reader.readAsText(file, 'UTF-8');
+    }
+  });
+}
+
+function parseCSV(text) {
+  return new Promise((resolve, reject) => {
+    Papa.parse(text, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: results => {
+        if (results.errors.length > 0) {
+          console.warn('CSV parse warnings:', results.errors);
+        }
+        resolve(results);
+      },
+      error: err => reject(err)
+    });
+  });
+}
+
+function detectColumnTypes(data, headers) {
+  const types = {};
+  const missing = {};
+  for (const h of headers) {
+    let numCount = 0, totalCount = 0, missingCount = 0;
+    for (const row of data) {
+      const v = row[h];
+      if (v === null || v === undefined || v === '') { missingCount++; continue; }
+      totalCount++;
+      if (typeof v === 'number' && !isNaN(v)) numCount++;
+    }
+    types[h] = (totalCount > 0 && numCount / totalCount >= 0.8) ? 'numeric' : 'string';
+    missing[h] = missingCount;
+  }
+  return { types, missing };
+}
+
+async function handleFile(file, encoding) {
+  try {
+    // If user manually selected an encoding, use it
+    const manualEncoding = $('encodingSelector').value;
+    const useEncoding = encoding || (manualEncoding !== 'auto' ? manualEncoding : null);
+
+    const text = await readFileAsText(file, useEncoding);
+    // Only auto-detect on first pass when in 'auto' mode
+    if (!useEncoding) {
+      const detectedEncoding = detectEncoding(text);
+      if (detectedEncoding === 'GBK') {
+        // Re-read with GBK
+        return handleFile(file, 'GBK');
+      }
+    }
+
+    const parsed = await parseCSV(text);
+    if (!parsed.data || parsed.data.length === 0) {
+      showToast('文件为空或无有效数据', 'warn');
+      return;
+    }
+
+    const headers = parsed.meta.fields || Object.keys(parsed.data[0]);
+    const { types, missing } = detectColumnTypes(parsed.data, headers);
+    const numericCols = headers.filter(h => types[h] === 'numeric');
+
+    state.rawData = parsed.data;
+    state.headers = headers;
+    state.numericCols = numericCols;
+    state.depVar = null;
+    state.indepVars = [];
+    state.results = null;
+    state.originalFile = file;
+    state.colTypes = types;
+    state.colMissing = missing;
+
+    renderDataPreview();
+    renderVariableSelectors();
+    showState('preview');
+
+    if (numericCols.length < 2) {
+      showToast('数值型列不足（需要至少 2 列），请检查数据', 'warn');
+    }
+  } catch (err) {
+    console.error(err);
+    if (!encoding) {
+      // Auto-detection failed, show encoding selector
+      state.originalFile = file;
+      showEncodingModal();
+    } else {
+      showToast('文件解析失败：' + err.message, 'error');
+    }
+  }
+}
+
+function showEncodingModal() {
+  $('encodingModal').style.display = 'flex';
+}
+
+function hideEncodingModal() {
+  $('encodingModal').style.display = 'none';
+}
+
+$('btnRetryEncoding').addEventListener('click', () => {
+  hideEncodingModal();
+  const enc = $('encodingSelect').value;
+  handleFile(state.originalFile, enc);
+});
+
+// ============================================================
+// DATA PREVIEW
+// ============================================================
+function renderDataPreview() {
+  const { rawData, headers, colTypes, colMissing } = state;
+
+  // Summary
+  let summaryHTML = '';
+  summaryHTML += `<div class="stat-chip"><strong>行数：</strong>${rawData.length}</div>`;
+  summaryHTML += `<div class="stat-chip"><strong>列数：</strong>${headers.length}</div>`;
+  summaryHTML += `<div class="stat-chip" style="background:var(--green-light);color:var(--green);"><strong>数值列：</strong>${state.numericCols.length}</div>`;
+  // Missing values
+  const totalMissing = Object.values(colMissing).reduce((a, b) => a + b, 0);
+  if (totalMissing > 0) {
+    summaryHTML += `<div class="stat-chip warn"><strong>缺失值：</strong>${totalMissing} 个</div>`;
+  }
+  $('dataSummary').innerHTML = summaryHTML;
+  $('rowCountBadge').textContent = rawData.length + ' 行';
+
+  // Table head
+  let theadHTML = '<tr>';
+  theadHTML += '<th>#</th>';
+  for (const h of headers) {
+    const typeBadge = colTypes[h] === 'numeric'
+      ? '<span class="col-type-badge num">数值</span>'
+      : '<span class="col-type-badge str">文本</span>';
+    const missInfo = colMissing[h] > 0 ? ` <span style="color:var(--orange);font-size:.7rem;">(${colMissing[h]}缺失)</span>` : '';
+    theadHTML += `<th>${h}${typeBadge}${missInfo}</th>`;
+  }
+  theadHTML += '</tr>';
+  $('previewTableHead').innerHTML = theadHTML;
+
+  // Table body — first 20 rows
+  const previewRows = rawData.slice(0, 20);
+  let tbodyHTML = '';
+  previewRows.forEach((row, idx) => {
+    tbodyHTML += '<tr>';
+    tbodyHTML += `<td style="color:var(--text-muted);">${idx + 1}</td>`;
+    for (const h of headers) {
+      const cls = colTypes[h] !== 'numeric' ? ' col-non-numeric' : '';
+      const val = row[h];
+      const display = (val === null || val === undefined || val === '') ? '<span style="color:var(--text-muted);font-style:italic;">空</span>' : String(val);
+      tbodyHTML += `<td class="${cls}">${display}</td>`;
+    }
+    tbodyHTML += '</tr>';
+  });
+  if (rawData.length > 20) {
+    tbodyHTML += `<tr><td colspan="${headers.length + 1}" style="text-align:center;color:var(--text-muted);padding:12px;">... 仅显示前 20 行，共 ${rawData.length} 行</td></tr>`;
+  }
+  $('previewTableBody').innerHTML = tbodyHTML;
+}
+
+// ============================================================
+// VARIABLE SELECTION
+// ============================================================
+function renderVariableSelectors() {
+  const { numericCols, depVar, indepVars } = state;
+
+  // Dependent variable dropdown
+  let depHTML = '<option value="">-- 请选择 --</option>';
+  for (const col of numericCols) {
+    const sel = depVar === col ? ' selected' : '';
+    depHTML += `<option value="${col}"${sel}>${col}</option>`;
+  }
+  $('depSelect').innerHTML = depHTML;
+
+  // Independent variable checkboxes
+  let indepHTML = '';
+  for (const col of numericCols) {
+    const disabled = depVar === col ? ' disabled' : '';
+    const checked = indepVars.includes(col) ? ' checked' : '';
+    indepHTML += `<label><input type="checkbox" value="${col}"${checked}${disabled}>${col}</label>`;
+  }
+  if (numericCols.length === 0) {
+    indepHTML = '<p style="color:var(--text-muted);padding:8px;">无可用数值列</p>';
+  }
+  $('indepSelect').innerHTML = indepHTML;
+
+  updateRegressionType();
+  updateAnalyzeButton();
+  updateVarHint();
+
+  // Bind events
+  $('depSelect').onchange = onDepVarChange;
+  document.querySelectorAll('#indepSelect input[type="checkbox"]').forEach(cb => {
+    cb.onchange = onIndepVarChange;
+  });
+}
+
+function onDepVarChange() {
+  state.depVar = $('depSelect').value || null;
+  state.indepVars = [];
+  renderVariableSelectors();
+}
+
+function onIndepVarChange() {
+  const boxes = document.querySelectorAll('#indepSelect input[type="checkbox"]:checked');
+  state.indepVars = Array.from(boxes).map(cb => cb.value);
+  updateRegressionType();
+  updateAnalyzeButton();
+  updateVarHint();
+}
+
+function updateRegressionType() {
+  const { depVar, rawData } = state;
+  if (!depVar || !rawData) {
+    state.regressionType = 'ols';
+  } else {
+    const uniqueVals = new Set(rawData.map(r => r[depVar]).filter(v => v !== null && v !== undefined));
+    if (uniqueVals.size === 2) {
+      state.regressionType = 'logistic';
+    } else {
+      state.regressionType = 'ols';
+    }
+  }
+  const indicator = $('regTypeIndicator');
+  if (state.regressionType === 'logistic') {
+    indicator.textContent = '🔀 逻辑回归 (二分类)';
+    indicator.className = 'regression-type-indicator logistic';
+  } else {
+    indicator.textContent = '📈 OLS 线性回归';
+    indicator.className = 'regression-type-indicator ols';
+  }
+}
+
+function updateAnalyzeButton() {
+  const btn = $('btnAnalyze');
+  btn.disabled = !(state.depVar && state.indepVars.length > 0);
+}
+
+function updateVarHint() {
+  const hint = $('varHint');
+  if (!state.depVar && state.indepVars.length === 0) {
+    hint.textContent = '请先选择因变量和至少一个自变量';
+  } else if (!state.depVar) {
+    hint.textContent = '请选择因变量 Y';
+  } else if (state.indepVars.length === 0) {
+    hint.textContent = '请至少选择一个自变量 X';
+  } else if (state.regressionType === 'logistic') {
+    hint.innerHTML = '检测到因变量为二分类变量，将自动使用<strong>逻辑回归</strong>';
+  } else {
+    hint.textContent = `将使用多元线性回归，${state.indepVars.length} 个自变量`;
+  }
+}
+
+// ============================================================
+// STATE TRANSITIONS
+// ============================================================
+function showState(s) {
+  dropzoneContainer.style.display = s === 'dropzone' ? 'flex' : 'none';
+  dataPreviewPanel.style.display = s === 'preview' ? 'block' : 'none';
+  varSelectPanel.style.display = s === 'preview' ? 'block' : 'none';
+  loadingOverlay.style.display = s === 'loading' ? 'block' : 'none';
+  resultsPanel.style.display = s === 'results' ? 'block' : 'none';
+}
+
+// ============================================================
+// REGRESSION ENGINE
+// ============================================================
+function prepareData() {
+  const { rawData, depVar, indepVars } = state;
+
+  // Filter rows with complete data
+  const allVars = [depVar, ...indepVars];
+  const validRows = rawData.filter(row =>
+    allVars.every(v => {
+      const val = row[v];
+      return val !== null && val !== undefined && val !== '' && !isNaN(val);
+    })
+  );
+
+  const n = validRows.length;
+  if (n < indepVars.length + 2) {
+    showToast(`有效样本量 (${n}) 不足，至少需要 ${indepVars.length + 2} 个观测值`, 'error');
+    return null;
+  }
+
+  const dropped = rawData.length - n;
+
+  // Build design matrix X and y vector
+  const y = validRows.map(r => r[depVar]);
+  const X = validRows.map(r => [1, ...indepVars.map(v => r[v])]); // intercept column
+
+  return { X, y, n, k: indepVars.length, dropped, indepVars };
+}
+
+function olsRegression(prep) {
+  const { X, y, n, k, indepVars, dropped } = prep;
+
+  // β = (X'X)^(-1) X'y
+  const Xt = Matrix.transpose(X);
+  const XtX = Matrix.multiply(Xt, X);
+  const XtX_inv = Matrix.inverse(XtX);
+  const Xty = Matrix.multiplyVec(Xt, y);
+  const beta = Matrix.multiplyVec(XtX_inv, Xty);
+
+  // Predicted values and residuals
+  const yHat = Matrix.multiplyVec(X, beta);
+  const residuals = y.map((yi, i) => yi - yHat[i]);
+
+  // SSE, SSR, SST
+  const yMean = y.reduce((a, b) => a + b, 0) / n;
+  const SSE = residuals.reduce((s, e) => s + e * e, 0);
+  const SSR = yHat.reduce((s, yh) => s + (yh - yMean) ** 2, 0);
+  const SST = SSE + SSR;
+
+  const dfReg = k;
+  const dfRes = n - k - 1;
+  const dfTot = n - 1;
+
+  const MSR = SSR / dfReg;
+  const MSE = SSE / dfRes;
+
+  // R-squared
+  const rSquared = SSR / SST;
+  const adjRSquared = 1 - (1 - rSquared) * (n - 1) / dfRes;
+
+  // F-test
+  const fStat = MSR / MSE;
+  const fPvalue = 1 - jStat.centralF.cdf(fStat, dfReg, dfRes);
+
+  // RSE
+  const rse = Math.sqrt(MSE);
+
+  // Standard errors and t-tests
+  const varCovDiag = Matrix.diag(XtX_inv);
+  const ses = varCovDiag.map(d => Math.sqrt(MSE * d));
+  const tStats = beta.map((b, i) => b / ses[i]);
+  const pValues = tStats.map(t =>
+    2 * (1 - jStat.studentt.cdf(Math.abs(t), dfRes))
+  );
+
+  // Confidence intervals (95%)
+  const tCrit = jStat.studentt.inv(0.975, dfRes);
+  const ciLower = beta.map((b, i) => b - tCrit * ses[i]);
+  const ciUpper = beta.map((b, i) => b + tCrit * ses[i]);
+
+  // VIF (using correlation matrix of predictors)
+  let vifValues = null;
+  if (k > 1) {
+    try {
+      const Xpred = prep.X.map(row => row.slice(1)); // without intercept
+      const R = Matrix.corrMatrix(Xpred);
+      const Rinv = Matrix.inverse(R);
+      vifValues = Matrix.diag(Rinv);
+    } catch (e) {
+      vifValues = new Array(k).fill(NaN);
+    }
+  } else {
+    vifValues = [1];
+  }
+
+  // Durbin-Watson
+  let dwNum = 0, dwDen = SSE;
+  for (let i = 1; i < n; i++) {
+    dwNum += (residuals[i] - residuals[i - 1]) ** 2;
+  }
+  const dwStat = dwNum / dwDen;
+
+  // Breusch-Pagan test (simplified)
+  let bpStat = null, bpPvalue = null;
+  if (k > 0) {
+    try {
+      const eSquared = residuals.map(e => e * e);
+      // Regress e² on X
+      const Xt_e2 = Matrix.multiplyVec(Xt, eSquared);
+      const gamma = Matrix.multiplyVec(XtX_inv, Xt_e2);
+      const e2Hat = Matrix.multiplyVec(X, gamma);
+      const e2Mean = eSquared.reduce((a, b) => a + b, 0) / n;
+      const ssrBP = e2Hat.reduce((s, h) => s + (h - e2Mean) ** 2, 0);
+      const sseBP = eSquared.reduce((s, ei, i) => s + (ei - e2Hat[i]) ** 2, 0);
+      const r2BP = ssrBP / (ssrBP + sseBP);
+      bpStat = n * r2BP;
+      bpPvalue = 1 - jStat.chisquare.cdf(bpStat, k);
+    } catch (e) {
+      bpStat = null;
+      bpPvalue = null;
+    }
+  }
+
+  // Jarque-Bera (normality of residuals)
+  const resMean = residuals.reduce((a, b) => a + b, 0) / n;
+  const m2 = residuals.reduce((s, e) => s + (e - resMean) ** 2, 0) / n;
+  const m3 = residuals.reduce((s, e) => s + (e - resMean) ** 3, 0) / n;
+  const m4 = residuals.reduce((s, e) => s + (e - resMean) ** 4, 0) / n;
+  const skewness = m3 / Math.pow(m2, 1.5);
+  const kurtosis = m4 / (m2 * m2);
+  const jbStat = n * ((skewness * skewness) / 6 + ((kurtosis - 3) ** 2) / 24);
+  const jbPvalue = 1 - jStat.chisquare.cdf(jbStat, 2);
+
+  // Significance stars
+  function stars(p) {
+    if (p < 0.001) return '***';
+    if (p < 0.01) return '**';
+    if (p < 0.05) return '*';
+    if (p < 0.1) return '.';
+    return '';
+  }
+
+  const coefTable = [
+    { name: '(截距)', coef: beta[0], se: ses[0], t: tStats[0], p: pValues[0], ciLow: ciLower[0], ciHigh: ciUpper[0], stars: stars(pValues[0]) },
+    ...indepVars.map((name, i) => ({
+      name, coef: beta[i + 1], se: ses[i + 1], t: tStats[i + 1], p: pValues[i + 1],
+      ciLow: ciLower[i + 1], ciHigh: ciUpper[i + 1], stars: stars(pValues[i + 1]),
+      vif: vifValues ? vifValues[i] : null
+    }))
+  ];
+
+  return {
+    type: 'ols',
+    n, k, dropped,
+    rSquared, adjRSquared, fStat, fPvalue, rse,
+    coefTable,
+    y, yHat, residuals,
+    dwStat, vifValues,
+    bpStat, bpPvalue,
+    jbStat, jbPvalue, skewness, kurtosis
+  };
+}
+
+function logisticRegression(prep) {
+  const { X, y, n, k, indepVars } = prep;
+
+  // Check binary
+  const uniqueY = [...new Set(y)].sort();
+  if (uniqueY.length !== 2) {
+    showToast('因变量不是二分类变量，无法进行逻辑回归', 'error');
+    return null;
+  }
+  // Map to 0/1
+  const yBinary = y.map(v => v === uniqueY[0] ? 0 : 1);
+  const positiveClass = String(uniqueY[1]);
+
+  // Gradient descent
+  let beta = new Array(k + 1).fill(0);
+  const learningRate = 0.1;
+  const maxIter = 2000;
+  const tol = 1e-7;
+  let prevLoss = Infinity;
+
+  for (let iter = 0; iter < maxIter; iter++) {
+    // Forward pass
+    const z = Matrix.multiplyVec(X, beta);
+    const pred = z.map(zi => 1 / (1 + Math.exp(-zi)));
+
+    // Loss (cross-entropy)
+    let loss = 0;
+    for (let i = 0; i < n; i++) {
+      const p = Math.max(Math.min(pred[i], 1 - 1e-10), 1e-10);
+      loss += -(yBinary[i] * Math.log(p) + (1 - yBinary[i]) * Math.log(1 - p));
+    }
+    loss /= n;
+
+    if (Math.abs(prevLoss - loss) < tol) break;
+    prevLoss = loss;
+
+    // Gradient
+    const errors = pred.map((p, i) => p - yBinary[i]);
+    const grad = new Array(k + 1).fill(0);
+    for (let j = 0; j <= k; j++) {
+      for (let i = 0; i < n; i++) {
+        grad[j] += errors[i] * X[i][j];
+      }
+      grad[j] /= n;
+    }
+
+    // Update
+    for (let j = 0; j <= k; j++) {
+      beta[j] -= learningRate * grad[j];
+    }
+  }
+
+  // Final predictions
+  const z = Matrix.multiplyVec(X, beta);
+  const prob = z.map(zi => 1 / (1 + Math.exp(-zi)));
+  const predClass = prob.map(p => p >= 0.5 ? 1 : 0);
+
+  // Standard errors from Hessian
+  // H = X' W X, where W = diag(p_i * (1-p_i))
+  // Then Var(beta) = H^(-1)
+  const Xt = Matrix.transpose(X);
+  const H = Array.from({length: k + 1}, () => new Array(k + 1).fill(0));
+  for (let a = 0; a <= k; a++) {
+    for (let b = 0; b <= k; b++) {
+      let sum = 0;
+      for (let i = 0; i < n; i++) {
+        sum += X[i][a] * X[i][b] * prob[i] * (1 - prob[i]);
+      }
+      H[a][b] = sum;
+    }
+  }
+  const Hinv = Matrix.inverse(H);
+  const ses = Matrix.diag(Hinv).map(d => Math.sqrt(d));
+  const zStats = beta.map((b, i) => b / ses[i]);
+  const pValues = zStats.map(zv => 2 * (1 - jStat.normal.cdf(Math.abs(zv), 0, 1)));
+
+  // Wald CI (95%)
+  const zCrit = 1.96;
+  const ciLower = beta.map((b, i) => b - zCrit * ses[i]);
+  const ciUpper = beta.map((b, i) => b + zCrit * ses[i]);
+
+  // Confusion matrix
+  let tp = 0, tn = 0, fp = 0, fn = 0;
+  for (let i = 0; i < n; i++) {
+    if (yBinary[i] === 1 && predClass[i] === 1) tp++;
+    else if (yBinary[i] === 0 && predClass[i] === 0) tn++;
+    else if (yBinary[i] === 0 && predClass[i] === 1) fp++;
+    else fn++;
+  }
+  const accuracy = (tp + tn) / n;
+  const precision = tp / (tp + fp) || 0;
+  const recall = tp / (tp + fn) || 0;
+  const f1 = 2 * precision * recall / (precision + recall) || 0;
+
+  // McFadden R²
+  const nullPred = yBinary.reduce((a, b) => a + b, 0) / n;
+  let nullLL = 0;
+  for (let i = 0; i < n; i++) {
+    const p = Math.max(Math.min(nullPred, 1 - 1e-10), 1e-10);
+    nullLL += yBinary[i] * Math.log(p) + (1 - yBinary[i]) * Math.log(1 - p);
+  }
+  let modelLL = 0;
+  for (let i = 0; i < n; i++) {
+    const p = Math.max(Math.min(prob[i], 1 - 1e-10), 1e-10);
+    modelLL += yBinary[i] * Math.log(p) + (1 - yBinary[i]) * Math.log(1 - p);
+  }
+  const mcfaddenR2 = 1 - modelLL / nullLL;
+
+  // ROC curve (100 thresholds)
+  const thresholds = [];
+  for (let t = 0; t <= 100; t++) thresholds.push(t / 100);
+  const rocPoints = thresholds.map(thresh => {
+    let tpR = 0, fpR = 0;
+    for (let i = 0; i < n; i++) {
+      if (prob[i] >= thresh) {
+        if (yBinary[i] === 1) tpR++;
+        else fpR++;
+      }
+    }
+    const tpr = tpR / (tp + fn) || 0;
+    const fpr = fpR / (fp + tn) || 0;
+    return { fpr, tpr, threshold: thresh };
+  });
+
+  // AUC via trapezoidal
+  let auc = 0;
+  for (let i = 1; i < rocPoints.length; i++) {
+    auc += (rocPoints[i].fpr - rocPoints[i - 1].fpr) * (rocPoints[i].tpr + rocPoints[i - 1].tpr) / 2;
+  }
+
+  // Stars
+  function stars(p) {
+    if (p < 0.001) return '***';
+    if (p < 0.01) return '**';
+    if (p < 0.05) return '*';
+    if (p < 0.1) return '.';
+    return '';
+  }
+
+  const coefTable = [
+    { name: '(截距)', coef: beta[0], se: ses[0], z: zStats[0], p: pValues[0], ciLow: ciLower[0], ciHigh: ciUpper[0], stars: stars(pValues[0]) },
+    ...indepVars.map((name, i) => ({
+      name, coef: beta[i + 1], se: ses[i + 1], z: zStats[i + 1], p: pValues[i + 1],
+      ciLow: ciLower[i + 1], ciHigh: ciUpper[i + 1], stars: stars(pValues[i + 1])
+    }))
+  ];
+
+  return {
+    type: 'logistic',
+    n, k, dropped: prep.dropped,
+    mcfaddenR2, auc,
+    coefTable,
+    y, yBinary, prob, predClass, rocPoints,
+    confusion: { tp, tn, fp, fn },
+    accuracy, precision, recall, f1,
+    positiveClass
+  };
+}
+
+// ============================================================
+// MAIN ANALYSIS FLOW
+// ============================================================
+async function runAnalysis() {
+  const prep = prepareData();
+  if (!prep) return;
+
+  showState('loading');
+
+  // Small delay to let loading state render
+  await new Promise(r => setTimeout(r, 50));
+
+  try {
+    let results;
+    if (state.regressionType === 'logistic') {
+      results = logisticRegression(prep);
+    } else {
+      results = olsRegression(prep);
+    }
+
+    if (!results) {
+      showState('preview');
+      return;
+    }
+
+    state.results = results;
+    destroyCharts();
+    renderResults();
+    showState('results');
+
+    // Scroll to results
+    resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    console.error('回归分析出错:', err);
+    showToast('分析失败: ' + err.message, 'error');
+    showState('preview');
+  }
+}
+
+// ============================================================
+// RESULTS RENDERING
+// ============================================================
+function renderResults() {
+  const r = state.results;
+  destroyCharts();
+
+  try { renderSummary(r); } catch (e) { console.error('摘要渲染失败:', e); }
+  try { renderCoefTable(r); } catch (e) { console.error('系数表渲染失败:', e); }
+  try { renderDiagnostics(r); } catch (e) { console.error('诊断渲染失败:', e); }
+  try { renderLogisticMetrics(r); } catch (e) { console.error('分类指标渲染失败:', e); }
+  try { renderCharts(r); } catch (e) { console.error('图表渲染失败:', e); showToast('部分图表渲染失败，请查看控制台', 'warn'); }
+
+  // Update collapsible sections
+  document.querySelectorAll('.section-toggle').forEach(toggle => {
+    toggle.classList.remove('collapsed');
+  });
+  document.querySelectorAll('.section-content').forEach(content => {
+    content.style.maxHeight = 'none';
+  });
+}
+
+function renderSummary(r) {
+  const grid = $('statsGrid');
+  let html = '';
+
+  if (r.type === 'ols') {
+    html += statBox('R²', r.rSquared.toFixed(4));
+    html += statBox('调整 R²', r.adjRSquared.toFixed(4));
+    html += statBox('F 统计量', r.fStat.toFixed(3));
+    html += statBox('F p 值', fmtP(r.fPvalue), r.fPvalue < 0.05);
+    html += statBox('残差标准误', r.rse.toFixed(4));
+    html += statBox('观测数', r.n);
+    html += statBox('自变量数', r.k);
+  } else {
+    html += statBox('McFadden R²', r.mcfaddenR2.toFixed(4));
+    html += statBox('AUC', r.auc.toFixed(4));
+    html += statBox('准确率', (r.accuracy * 100).toFixed(1) + '%');
+    html += statBox('精确率', (r.precision * 100).toFixed(1) + '%');
+    html += statBox('召回率', (r.recall * 100).toFixed(1) + '%');
+    html += statBox('F1 分数', r.f1.toFixed(4));
+    html += statBox('观测数', r.n);
+  }
+
+  if (r.dropped > 0) {
+    html += statBox('删除缺失行', r.dropped.toString(), false, '由于缺失值');
+  }
+
+  grid.innerHTML = html;
+}
+
+function statBox(label, value, highlight = false, sublabel = '') {
+  const cls = highlight ? ' stat-box sig' : 'stat-box';
+  const sub = sublabel ? `<div class="label">${sublabel}</div>` : '';
+  return `<div class="${cls}"><div class="value">${value}</div><div class="label">${label}</div>${sub}</div>`;
+}
+
+function renderCoefTable(r) {
+  let html = '<thead><tr>';
+  html += '<th>变量</th><th>系数</th><th>标准误</th>';
+  if (r.type === 'ols') html += '<th>t 值</th>';
+  else html += '<th>z 值</th>';
+  html += '<th>p 值</th><th>显著性</th><th>95% CI 下限</th><th>95% CI 上限</th>';
+  if (r.type === 'ols' && r.vifValues) html += '<th>VIF</th>';
+  html += '</tr></thead><tbody>';
+
+  for (const row of r.coefTable) {
+    const coefClass = row.coef >= 0 ? 'coef-pos' : 'coef-neg';
+    let starClass = '';
+    if (row.stars.includes('***')) starClass = 'sig-3';
+    else if (row.stars.includes('**')) starClass = 'sig-2';
+    else if (row.stars.includes('*')) starClass = 'sig-1';
+
+    html += '<tr>';
+    html += `<td class="var-name">${row.name}</td>`;
+    html += `<td class="${coefClass}">${row.coef.toFixed(4)}</td>`;
+    html += `<td>${row.se.toFixed(4)}</td>`;
+    html += `<td>${(row.t || row.z).toFixed(3)}</td>`;
+    html += `<td>${fmtP(row.p)}</td>`;
+    html += `<td class="sig-star ${starClass}">${row.stars || ''}</td>`;
+    html += `<td>${row.ciLow.toFixed(4)}</td>`;
+    html += `<td>${row.ciHigh.toFixed(4)}</td>`;
+    if (r.type === 'ols' && r.vifValues && row.vif !== undefined) {
+      const vifClass = row.vif > 10 ? ' style="color:var(--red);font-weight:600;"' : '';
+      html += `<td${vifClass}>${row.vif.toFixed(2)}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody>';
+  $('coefTable').innerHTML = html;
+}
+
+function renderDiagnostics(r) {
+  if (r.type !== 'ols') {
+    $('diagCard').style.display = 'none';
+    return;
+  }
+  $('diagCard').style.display = 'block';
+
+  let html = '';
+
+  // Durbin-Watson
+  const dwClass = (r.dwStat > 1.5 && r.dwStat < 2.5) ? 'diag-ok' : (r.dwStat < 1 || r.dwStat > 3 ? 'diag-bad' : 'diag-warn');
+  const dwInterp = r.dwStat < 1 ? '（正自相关）' : r.dwStat > 3 ? '（负自相关）' : (r.dwStat < 1.5 || r.dwStat > 2.5 ? '（轻微自相关）' : '（无明显自相关）');
+  html += `<tr><td>Durbin-Watson（自相关）</td><td class="${dwClass}">${r.dwStat.toFixed(3)} ${dwInterp}</td></tr>`;
+
+  // Jarque-Bera
+  const jbClass = r.jbPvalue > 0.05 ? 'diag-ok' : 'diag-bad';
+  const jbInterp = r.jbPvalue > 0.05 ? '（残差符合正态分布）' : '（残差不服从正态分布）';
+  html += `<tr><td>Jarque-Bera（正态性）</td><td class="${jbClass}">JB = ${r.jbStat.toFixed(3)}, p = ${fmtP(r.jbPvalue)} ${jbInterp}</td></tr>`;
+
+  // Skewness / Kurtosis
+  html += `<tr><td>残差偏度 (Skewness)</td><td>${r.skewness.toFixed(3)}</td></tr>`;
+  html += `<tr><td>残差峰度 (Kurtosis)</td><td>${r.kurtosis.toFixed(3)}</td></tr>`;
+
+  // Breusch-Pagan
+  if (r.bpStat !== null) {
+    const bpClass = r.bpPvalue > 0.05 ? 'diag-ok' : 'diag-bad';
+    const bpInterp = r.bpPvalue > 0.05 ? '（无异方差）' : '（存在异方差）';
+    html += `<tr><td>Breusch-Pagan（异方差）</td><td class="${bpClass}">BP = ${r.bpStat.toFixed(3)}, p = ${fmtP(r.bpPvalue)} ${bpInterp}</td></tr>`;
+  }
+
+  // VIF summary
+  if (r.vifValues && r.vifValues.length > 0) {
+    const maxVIF = Math.max(...r.vifValues.filter(v => !isNaN(v)));
+    const vifClass = maxVIF > 10 ? 'diag-bad' : maxVIF > 5 ? 'diag-warn' : 'diag-ok';
+    const vifInterp = maxVIF > 10 ? '（严重多重共线性）' : maxVIF > 5 ? '（中等多重共线性）' : '（无明显多重共线性）';
+    html += `<tr><td>最大 VIF（多重共线性）</td><td class="${vifClass}">${maxVIF.toFixed(2)} ${vifInterp}</td></tr>`;
+  }
+
+  $('diagTable').innerHTML = html;
+}
+
+function renderLogisticMetrics(r) {
+  if (r.type !== 'logistic') {
+    $('logisticMetricsCard').style.display = 'none';
+    return;
+  }
+  $('logisticMetricsCard').style.display = 'block';
+
+  // Confusion matrix
+  $('confusionMatrixContainer').innerHTML = `
+    <div class="confusion-matrix">
+      <div class="cm-cell cm-header"></div>
+      <div class="cm-cell cm-header">预测 1</div>
+      <div class="cm-cell cm-header">预测 0</div>
+      <div class="cm-cell cm-header">实际 1</div>
+      <div class="cm-cell cm-tp">TP: ${r.confusion.tp}</div>
+      <div class="cm-cell cm-fn">FN: ${r.confusion.fn}</div>
+      <div class="cm-cell cm-header">实际 0</div>
+      <div class="cm-cell cm-fp">FP: ${r.confusion.fp}</div>
+      <div class="cm-cell cm-tn">TN: ${r.confusion.tn}</div>
+    </div>
+  `;
+
+  // Class metrics
+  $('classMetricsGrid').innerHTML = '';
+  ['accuracy', 'precision', 'recall', 'f1'].forEach(m => {
+    const val = r[m];
+    const el = document.createElement('div');
+    el.className = 'stat-box';
+    el.innerHTML = `<div class="value">${m === 'accuracy' ? (val*100).toFixed(1)+'%' : val.toFixed(4)}</div><div class="label">${({accuracy:'准确率',precision:'精确率',recall:'召回率',f1:'F1 分数'})[m]}</div>`;
+    $('classMetricsGrid').appendChild(el);
+  });
+}
+
+function fmtP(p) {
+  if (p < 0.0001) return '<0.0001';
+  return p.toFixed(4);
+}
+
+// ============================================================
+// CHARTS
+// ============================================================
+function destroyCharts() {
+  Object.values(state.charts).forEach(c => c.destroy());
+  state.charts = {};
+  $('chartsGrid').innerHTML = '';
+}
+
+function createChartCard(title, canvasId, fullWidth = false) {
+  const card = document.createElement('div');
+  card.className = 'chart-card' + (fullWidth ? ' full-width' : '');
+  card.innerHTML = `
+    <div class="chart-title">
+      <span>${title}</span>
+      <button class="chart-download-btn" data-canvas="${canvasId}">⬇ PNG</button>
+    </div>
+    <canvas id="${canvasId}"></canvas>
+  `;
+  $('chartsGrid').appendChild(card);
+
+  // Download button
+  card.querySelector('.chart-download-btn').addEventListener('click', () => {
+    const canvas = document.getElementById(canvasId);
+    const link = document.createElement('a');
+    link.download = `${canvasId}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('图表已下载');
+  });
+}
+
+function renderCharts(r) {
+  if (r.type === 'ols') {
+    renderPredVsActual(r);
+    renderResidVsFitted(r);
+    renderQQPlot(r);
+    renderResidHist(r);
+    renderCoefChart(r);
+  } else {
+    renderROCCurve(r);
+    renderCoefChart(r);
+  }
+}
+
+// Common Chart.js options
+function baseOptions() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+      padding: { top: 8, right: 12, bottom: 8, left: 8 }
+    },
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      x: {
+        grid: { color: '#F1F5F9' },
+        ticks: { font: { size: 11 }, maxTicksLimit: 8, padding: 4 }
+      },
+      y: {
+        grid: { color: '#F1F5F9' },
+        ticks: { font: { size: 11 }, maxTicksLimit: 8, padding: 4 }
+      }
+    }
+  };
+}
+
+function renderPredVsActual(r) {
+  createChartCard('实际值 vs 预测值', 'chartPredActual');
+
+  const minVal = Math.min(...r.y, ...r.yHat);
+  const maxVal = Math.max(...r.y, ...r.yHat);
+  const pad = (maxVal - minVal) * 0.1;
+
+  const ctx = document.getElementById('chartPredActual').getContext('2d');
+  state.charts.predActual = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: '数据点',
+          data: r.y.map((yi, i) => ({ x: yi, y: r.yHat[i] })),
+          backgroundColor: 'rgba(37,99,235,0.4)',
+          borderColor: 'rgba(37,99,235,0.6)',
+          pointRadius: 4,
+          pointHoverRadius: 6
+        },
+        {
+          label: 'y = x 参考线',
+          data: [{ x: minVal - pad, y: minVal - pad }, { x: maxVal + pad, y: maxVal + pad }],
+          type: 'line',
+          borderColor: '#DC2626',
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      ...baseOptions(),
+      aspectRatio: 1.4,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '实际值', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 6, padding: 4 }
+        },
+        y: {
+          title: { display: true, text: '预测值', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 6, padding: 4 }
+        }
+      }
+    }
+  });
+}
+
+function renderResidVsFitted(r) {
+  createChartCard('残差 vs 拟合值', 'chartResidFitted');
+
+  const ctx = document.getElementById('chartResidFitted').getContext('2d');
+  const yMin = Math.min(...r.yHat);
+  const yMax = Math.max(...r.yHat);
+
+  state.charts.residFitted = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: '残差',
+          data: r.yHat.map((yh, i) => ({ x: yh, y: r.residuals[i] })),
+          backgroundColor: 'rgba(37,99,235,0.4)',
+          borderColor: 'rgba(37,99,235,0.6)',
+          pointRadius: 3,
+          pointHoverRadius: 5
+        },
+        {
+          label: 'y = 0',
+          data: [{ x: yMin, y: 0 }, { x: yMax, y: 0 }],
+          type: 'line',
+          borderColor: '#DC2626',
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      ...baseOptions(),
+      aspectRatio: 1.4,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '拟合值', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 6, padding: 4 }
+        },
+        y: {
+          title: { display: true, text: '残差', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 6, padding: 4 }
+        }
+      }
+    }
+  });
+}
+
+function renderQQPlot(r) {
+  createChartCard('残差 Q-Q 图', 'chartQQ');
+
+  const resids = [...r.residuals].sort((a, b) => a - b);
+  const n = resids.length;
+  const theoretical = resids.map((_, i) =>
+    jStat.normal.inv((i + 0.5) / n, 0, 1)
+  );
+
+  const ctx = document.getElementById('chartQQ').getContext('2d');
+  const tMin = Math.min(...theoretical);
+  const tMax = Math.max(...theoretical);
+
+  state.charts.qq = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Q-Q 点',
+          data: theoretical.map((t, i) => ({ x: t, y: resids[i] })),
+          backgroundColor: 'rgba(37,99,235,0.4)',
+          borderColor: 'rgba(37,99,235,0.6)',
+          pointRadius: 3,
+          pointHoverRadius: 5
+        },
+        {
+          label: '参考线',
+          data: [
+            { x: tMin, y: tMin * (resids[n - 1] - resids[0]) / (theoretical[n - 1] - theoretical[0]) || 0 },
+            { x: tMax, y: tMax * (resids[n - 1] - resids[0]) / (theoretical[n - 1] - theoretical[0]) || 0 }
+          ],
+          type: 'line',
+          borderColor: '#DC2626',
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      ...baseOptions(),
+      plugins: {
+        legend: {
+          display: true,
+          labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } }
+        }
+      },
+      aspectRatio: 1.4,
+      scales: {
+        x: {
+          title: { display: true, text: '理论分位数 (正态)', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 6, padding: 4 }
+        },
+        y: {
+          title: { display: true, text: '样本分位数', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 6, padding: 4 }
+        }
+      }
+    }
+  });
+}
+
+function renderResidHist(r) {
+  createChartCard('残差分布直方图', 'chartResidHist');
+
+  const resids = r.residuals;
+  const n = resids.length;
+  const binCount = Math.min(30, Math.ceil(Math.sqrt(n)));
+  const rMin = Math.min(...resids);
+  const rMax = Math.max(...resids);
+  const binWidth = (rMax - rMin) / binCount || 0.01;
+
+  const bins = new Array(binCount).fill(0);
+  const binLabels = [];
+  for (let i = 0; i < binCount; i++) {
+    const low = rMin + i * binWidth;
+    const high = low + binWidth;
+    binLabels.push(low.toFixed(2));
+  }
+  for (const r of resids) {
+    let idx = Math.floor((r - rMin) / binWidth);
+    if (idx >= binCount) idx = binCount - 1;
+    if (idx < 0) idx = 0;
+    bins[idx]++;
+  }
+
+  // Normal curve overlay
+  const resMean = resids.reduce((a, b) => a + b, 0) / n;
+  const resStd = Math.sqrt(resids.reduce((s, e) => s + (e - resMean) ** 2, 0) / n);
+  const normalCurve = binLabels.map(low => {
+    const x = parseFloat(low) + binWidth / 2;
+    return n * binWidth * jStat.normal.pdf(x, resMean, resStd);
+  });
+
+  const ctx = document.getElementById('chartResidHist').getContext('2d');
+  state.charts.residHist = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: binLabels,
+      datasets: [
+        {
+          label: '频数',
+          data: bins,
+          backgroundColor: 'rgba(37,99,235,0.5)',
+          borderColor: 'rgba(37,99,235,0.8)',
+          borderWidth: 1
+        },
+        {
+          label: '正态分布',
+          data: normalCurve,
+          type: 'line',
+          borderColor: '#DC2626',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      ...baseOptions(),
+      aspectRatio: 1.4,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '残差', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 10 }, maxTicksLimit: 10, padding: 4 }
+        },
+        y: {
+          title: { display: true, text: '频数', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 6, padding: 4 }
+        }
+      }
+    }
+  });
+}
+
+function renderCoefChart(r) {
+  createChartCard('回归系数（含 95% 置信区间）', 'chartCoef', true);
+
+  // Exclude intercept for better visualization
+  const coefRows = r.coefTable.slice(1);
+  const labels = coefRows.map(row => row.name);
+  const coefs = coefRows.map(row => row.coef);
+  const ciLows = coefRows.map(row => row.ciLow);
+  const ciHighs = coefRows.map(row => row.ciHigh);
+  const errorLow = coefRows.map((row, i) => coefs[i] - ciLows[i]);
+  const errorHigh = coefRows.map((row, i) => ciHighs[i] - coefs[i]);
+
+  const bgColors = coefs.map(c => c >= 0 ? 'rgba(220,38,38,0.7)' : 'rgba(22,163,74,0.7)'); // 涨红跌绿
+  const borderColors = coefs.map(c => c >= 0 ? 'rgba(220,38,38,1)' : 'rgba(22,163,74,1)');
+
+  const ctx = document.getElementById('chartCoef').getContext('2d');
+  state.charts.coef = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '系数',
+        data: coefs,
+        backgroundColor: bgColors,
+        borderColor: borderColors,
+        borderWidth: 1,
+        errorLow: errorLow,
+        errorHigh: errorHigh
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      aspectRatio: 2.2,
+      layout: { padding: { top: 8, right: 16, bottom: 8, left: 8 } },
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '系数值', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, maxTicksLimit: 8, padding: 4 }
+        },
+        y: {
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 }, padding: 4 }
+        }
+      }
+    },
+    plugins: [{
+      id: 'errorBars',
+      afterDraw(chart) {
+        const { ctx, scales: { x, y } } = chart;
+        const meta = chart.getDatasetMeta(0);
+        const data = meta.data;
+        const ds = chart.data.datasets[0];
+
+        ctx.save();
+        ctx.strokeStyle = '#64748B';
+        ctx.lineWidth = 2;
+
+        data.forEach((pt, i) => {
+          const low = x.getPixelForValue(ds.data[i] - ds.errorLow[i]);
+          const high = x.getPixelForValue(ds.data[i] + ds.errorHigh[i]);
+          const yPos = pt.y;
+
+          ctx.beginPath();
+          ctx.moveTo(low, yPos);
+          ctx.lineTo(high, yPos);
+          ctx.stroke();
+
+          // Caps
+          ctx.beginPath();
+          ctx.moveTo(low, yPos - 6);
+          ctx.lineTo(low, yPos + 6);
+          ctx.moveTo(high, yPos - 6);
+          ctx.lineTo(high, yPos + 6);
+          ctx.stroke();
+        });
+
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+function renderROCCurve(r) {
+  createChartCard('ROC 曲线 (AUC = ' + r.auc.toFixed(4) + ')', 'chartROC', true);
+
+  const ctx = document.getElementById('chartROC').getContext('2d');
+  state.charts.roc = new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'ROC 曲线',
+          data: r.rocPoints.map(p => ({ x: p.fpr, y: p.tpr })),
+          borderColor: '#2563EB',
+          backgroundColor: 'rgba(37,99,235,0.1)',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: true
+        },
+        {
+          label: '随机分类器',
+          data: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+          borderColor: '#94A3B8',
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      aspectRatio: 2,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '1 - 特异度 (FPR)', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 } },
+          min: 0, max: 1
+        },
+        y: {
+          title: { display: true, text: '灵敏度 (TPR)', font: { size: 12 } },
+          grid: { color: '#F1F5F9' },
+          ticks: { font: { size: 11 } },
+          min: 0, max: 1
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
+function exportCoefCSV() {
+  const r = state.results;
+  if (!r) return;
+
+  let csv = '变量,系数,标准误,';
+  csv += r.type === 'ols' ? 't值,p值,显著性,95%CI下限,95%CI上限' : 'z值,p值,显著性,95%CI下限,95%CI上限';
+  if (r.type === 'ols' && r.vifValues) csv += ',VIF';
+  csv += '\n';
+
+  for (const row of r.coefTable) {
+    csv += `${row.name},${row.coef.toFixed(6)},${row.se.toFixed(6)},${(row.t || row.z).toFixed(4)},${row.p.toFixed(6)},${row.stars},${row.ciLow.toFixed(6)},${row.ciHigh.toFixed(6)}`;
+    if (r.type === 'ols' && r.vifValues && row.vif !== undefined) csv += `,${row.vif.toFixed(4)}`;
+    csv += '\n';
+  }
+
+  downloadFile(csv, 'regression_coefficients.csv', 'text/csv;charset=utf-8');
+  showToast('系数表已导出');
+}
+
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob(['\uFEFF' + content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+// SAMPLE DATA
+// ============================================================
+function generateSampleOLS() {
+  // 模拟"员工薪资影响因素"数据集
+  const headers = ['薪资_万元', '工作年限', '教育年限', '绩效评分', '性别', '部门编码'];
+  const rows = [];
+  for (let i = 0; i < 120; i++) {
+    const exp = Math.round(1 + Math.random() * 25);
+    const edu = Math.round(9 + Math.random() * 10);
+    const perf = Math.round(55 + Math.random() * 45);
+    const gender = Math.random() > 0.5 ? 1 : 0;
+    const dept = Math.floor(Math.random() * 5) + 1;
+    const salary = 3 + exp * 1.3 + edu * 0.85 + perf * 0.18 + gender * 1.8 + dept * 0.5 + (Math.random() - 0.5) * 7;
+    rows.push([parseFloat(salary.toFixed(2)), exp, edu, perf, gender, dept]);
+  }
+  return { headers, rows };
+}
+
+function generateSampleLogistic() {
+  // 模拟"是否晋升"数据集
+  const headers = ['是否晋升', '绩效评分', '工作年限', '培训次数', '学历等级'];
+  const rows = [];
+  for (let i = 0; i < 100; i++) {
+    const perf = Math.round(55 + Math.random() * 45);
+    const exp = Math.round(1 + Math.random() * 15);
+    const training = Math.round(Math.random() * 8);
+    const eduLevel = Math.round(1 + Math.random() * 3);
+    const score = -8 + perf * 0.12 + exp * 0.25 + training * 0.4 + eduLevel * 0.6 + (Math.random() - 0.5) * 2;
+    const promoted = 1 / (1 + Math.exp(-score)) > Math.random() ? 1 : 0;
+    rows.push([promoted, perf, exp, training, eduLevel]);
+  }
+  return { headers, rows };
+}
+
+function loadSampleData(type = 'ols') {
+  const { headers, rows } = type === 'logistic' ? generateSampleLogistic() : generateSampleOLS();
+  const csvContent = headers.join(',') + '\n' + rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+  const file = new File([blob], `sample_${type}.csv`, { type: 'text/csv' });
+  handleFile(file);
+}
+
+// ============================================================
+// EVENT HANDLERS
+// ============================================================
+
+// Dropzone (not a label, needs manual click forwarding)
+dropzone.addEventListener('click', () => fileInput.click());
+
+// File input change
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    if (!file.name.endsWith('.csv')) {
+      showToast('仅支持 .csv 文件', 'warn');
+      return;
+    }
+    state.originalFile = file;
+    handleFile(file);
+  }
+  fileInput.value = '';
+});
+
+// Drag and drop
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('drag-over');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('drag-over');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    if (!file.name.endsWith('.csv')) {
+      showToast('仅支持 .csv 文件', 'warn');
+      return;
+    }
+    state.originalFile = file;
+    handleFile(file);
+  }
+});
+
+// Also allow drag/drop on entire page when in dropzone state
+document.addEventListener('dragover', (e) => {
+  if (state.rawData === null) {
+    e.preventDefault();
+  }
+});
+document.addEventListener('drop', (e) => {
+  if (state.rawData === null && e.dataTransfer.files.length > 0) {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.csv')) {
+      state.originalFile = file;
+      handleFile(file);
+    }
+  }
+});
+
+// Analyze button
+$('btnAnalyze').addEventListener('click', runAnalysis);
+
+// Export coefficient CSV
+$('btnExportCoef').addEventListener('click', exportCoefCSV);
+
+// Sample data button
+$('btnSample').addEventListener('click', () => {
+  // Show a simple choice
+  const choice = confirm('点击「确定」加载线性回归示例（员工薪资），\n点击「取消」加载逻辑回归示例（是否晋升）。');
+  loadSampleData(choice ? 'ols' : 'logistic');
+});
+
+// Collapsible sections
+document.addEventListener('click', (e) => {
+  const toggle = e.target.closest('.section-toggle');
+  if (!toggle) return;
+  const content = toggle.nextElementSibling;
+  if (!content || !content.classList.contains('section-content')) return;
+
+  toggle.classList.toggle('collapsed');
+  if (toggle.classList.contains('collapsed')) {
+    content.style.maxHeight = '0';
+  } else {
+    content.style.maxHeight = content.scrollHeight + 'px';
+  }
+});
+
+// Encoding modal close on background click
+$('encodingModal').addEventListener('click', (e) => {
+  if (e.target === $('encodingModal')) {
+    hideEncodingModal();
+  }
+});
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+    e.preventDefault();
+    fileInput.click();
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+showState('dropzone');
+console.log('📊 回归分析工具已就绪');
+console.log('  - 拖放 CSV 文件到页面中央开始');
+console.log('  - 点击「示例数据」加载演示数据');
+console.log('  - Ctrl+O 快速打开文件');
+</script>
+</body>
+</html>

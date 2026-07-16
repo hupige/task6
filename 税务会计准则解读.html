@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>税务相关会计准则解读与实务应用</title>
+<style>
+  @page {
+    size: A4;
+    margin: 2cm 2.2cm;
+    @top-center {
+      content: element(header);
+      font-size: 9pt;
+      color: #1a3a5c;
+      font-family: "Microsoft YaHei", "SimHei", sans-serif;
+    }
+    @bottom-center {
+      content: counter(page);
+      font-size: 9pt;
+      color: #666;
+    }
+  }
+  @page cover {
+    @top-center { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "SimSun", "宋体", serif;
+    font-size: 10.5pt;
+    line-height: 1.8;
+    color: #222;
+    counter-reset: chapter;
+  }
+
+  /* ========== COVER ========== */
+  .cover-page {
+    page: cover;
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1f3f 0%, #15325e 40%, #1a3a5c 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4cm 3cm;
+    position: relative;
+    break-after: page;
+  }
+  .cover-page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 80px
+    );
+  }
+  .cover-top-line {
+    width: 120px;
+    height: 4px;
+    background: #d4a853;
+    margin-bottom: 2cm;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-main-title {
+    font-family: "SimHei", "黑体", sans-serif;
+    font-size: 32pt;
+    font-weight: bold;
+    letter-spacing: 4pt;
+    margin-bottom: 1.2cm;
+    position: relative;
+    z-index: 1;
+    line-height: 1.4;
+  }
+  .cover-subtitle {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 14pt;
+    color: #b8c9dd;
+    margin-bottom: 2.5cm;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-meta {
+    font-size: 11pt;
+    color: #95a8c0;
+    position: relative;
+    z-index: 1;
+    line-height: 2.2;
+  }
+  .cover-meta span {
+    display: block;
+  }
+  .cover-bottom-line {
+    width: 200px;
+    height: 1px;
+    background: rgba(212,168,83,0.6);
+    margin-top: 2cm;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ========== TOC ========== */
+  .toc-page {
+    break-after: page;
+    padding: 1.5cm 0;
+  }
+  .toc-title {
+    font-family: "SimHei", sans-serif;
+    font-size: 22pt;
+    color: #1a3a5c;
+    text-align: center;
+    margin-bottom: 1.5cm;
+    padding-bottom: 0.5cm;
+    border-bottom: 3px solid #d4a853;
+    letter-spacing: 3pt;
+  }
+  .toc-list { list-style: none; }
+  .toc-chapter {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #1a3a5c;
+    margin: 0.6cm 0 0.2cm 0;
+    padding: 0.1cm 0;
+    border-left: 4px solid #d4a853;
+    padding-left: 0.5cm;
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.15cm 0.5cm 0.15cm 1.2cm;
+    color: #444;
+    font-size: 10pt;
+    border-bottom: 1px dotted #ddd;
+  }
+  .toc-item a { color: #333; text-decoration: none; }
+  .toc-item a:hover { color: #d4a853; }
+
+  /* ========== CHAPTER COVER ========== */
+  .chapter-cover {
+    break-before: page;
+    break-after: page;
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a3a5c 0%, #1e4a7a 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 4cm 3cm;
+  }
+  .chapter-number {
+    font-family: "Georgia", serif;
+    font-size: 72pt;
+    color: rgba(212,168,83,0.4);
+    margin-bottom: 0.5cm;
+  }
+  .chapter-cover-title {
+    font-family: "SimHei", sans-serif;
+    font-size: 28pt;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 1cm;
+  }
+  .chapter-cover-meta {
+    font-size: 11pt;
+    color: #95a8c0;
+    line-height: 2;
+  }
+  .chapter-cover-line {
+    width: 100px;
+    height: 3px;
+    background: #d4a853;
+    margin-top: 1cm;
+  }
+
+  /* ========== SECTION HEADERS ========== */
+  h1 {
+    font-family: "SimHei", sans-serif;
+    font-size: 20pt;
+    color: #1a3a5c;
+    margin: 1cm 0 0.5cm 0;
+    padding-bottom: 0.2cm;
+    border-bottom: 2px solid #d4a853;
+  }
+  h2 {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 14pt;
+    color: #15325e;
+    margin: 0.7cm 0 0.4cm 0;
+    padding-left: 0.5cm;
+    border-left: 4px solid #d4a853;
+  }
+  h3 {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 12pt;
+    color: #333;
+    margin: 0.5cm 0 0.3cm 0;
+  }
+  h4 {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 11pt;
+    color: #555;
+    margin: 0.3cm 0 0.2cm 0;
+  }
+
+  /* ========== COMPONENTS ========== */
+  .overview-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5cm 0;
+    font-size: 10pt;
+  }
+  .overview-table th {
+    background: #1a3a5c;
+    color: white;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: normal;
+    width: 30%;
+  }
+  .overview-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f8f9fa;
+  }
+
+  .original-box {
+    background: #f5f7fa;
+    border-left: 4px solid #1a3a5c;
+    padding: 12px 16px;
+    margin: 0.5cm 0;
+    font-size: 10pt;
+    color: #444;
+    border-radius: 0 4px 4px 0;
+  }
+  .original-box .label {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 9pt;
+    color: #1a3a5c;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1pt;
+  }
+
+  .interpretation-box {
+    background: #fefdf7;
+    border: 1px solid #e8dca0;
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 0.4cm 0;
+  }
+  .interpretation-box .label {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 9pt;
+    color: #b8860b;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+
+  .case-box {
+    background: #fff8f0;
+    border: 1px solid #f0c070;
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 0.4cm 0;
+  }
+  .case-box .label {
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 9pt;
+    color: #c07030;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .case-box .case-scene {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .entry-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.3cm 0;
+    font-size: 9.5pt;
+    font-family: "Consolas", "Courier New", monospace;
+  }
+  .entry-table th {
+    background: #e8edf2;
+    padding: 5px 8px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #ccc;
+  }
+  .entry-table td {
+    padding: 5px 8px;
+    border: 1px solid #e0e0e0;
+  }
+  .entry-table .dr { color: #1a6e1a; }
+  .entry-table .cr { color: #8b0000; }
+
+  .formula-box {
+    background: #f0f4f8;
+    border: 1px solid #b0c4d8;
+    border-radius: 4px;
+    padding: 10px 16px;
+    margin: 0.4cm 0;
+    text-align: center;
+    font-family: "Consolas", monospace;
+    font-size: 10pt;
+    color: #1a3a5c;
+  }
+
+  .tip-box {
+    background: #e8f4e8;
+    border-left: 4px solid #2e7d32;
+    padding: 10px 14px;
+    margin: 0.4cm 0;
+    font-size: 9.5pt;
+    color: #2e5e2e;
+  }
+  .tip-box::before {
+    content: "★ 实务提示：";
+    font-weight: bold;
+  }
+
+  .warn-box {
+    background: #fdf0f0;
+    border-left: 4px solid #c62828;
+    padding: 10px 14px;
+    margin: 0.4cm 0;
+    font-size: 9.5pt;
+    color: #7b1f1f;
+  }
+  .warn-box::before {
+    content: "▲ 注意事项：";
+    font-weight: bold;
+  }
+
+  .diagram-box {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 0.5cm 0;
+    text-align: center;
+  }
+
+  /* ========== SUMMARY TABLE ========== */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5cm 0;
+    font-size: 9.5pt;
+  }
+  .summary-table th {
+    background: #1a3a5c;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    font-weight: normal;
+    font-family: "Microsoft YaHei", sans-serif;
+  }
+  .summary-table td {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  .summary-table tr:nth-child(even) td { background: #f8f9fa; }
+
+  .flow-step {
+    display: inline-block;
+    background: #1a3a5c;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin: 3px;
+    font-size: 9pt;
+    font-family: "Microsoft YaHei", sans-serif;
+  }
+  .flow-arrow {
+    display: inline-block;
+    color: #d4a853;
+    margin: 0 4px;
+    font-size: 11pt;
+  }
+
+  .gold-highlight { color: #b8860b; font-weight: bold; }
+  .blue-highlight { color: #1a3a5c; font-weight: bold; }
+  .red-highlight { color: #c62828; font-weight: bold; }
+
+  /* Page break helper */
+  .pb { break-before: page; }
+  .pa { break-after: page; }
+
+  /* Header/Footer */
+  .running-header {
+    position: running(header);
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 9pt;
+    color: #1a3a5c;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 4px;
+    text-align: left;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER ==================== -->
+<div class="cover-page">
+  <div class="cover-top-line"></div>
+  <div class="cover-main-title">税务相关会计准则<br>解读与实务应用</div>
+  <div class="cover-subtitle">基于财政部官方准则的案例式解读</div>
+  <div class="cover-meta">
+    <span>适用对象：大公司财经部门账务会计</span>
+    <span>版本：V1.0 | 2026年7月</span>
+    <span>数据来源：中华人民共和国财政部会计司（kjs.mof.gov.cn）</span>
+  </div>
+  <div class="cover-bottom-line"></div>
+</div>
+
+<!-- ==================== TOC ==================== -->
+<div class="toc-page">
+  <div class="toc-title">目&emsp;录</div>
+  <ul class="toc-list">
+    <li class="toc-chapter">第一章　《企业会计准则第18号——所得税》</li>
+    <li class="toc-item"><a href="#c1s1">1.1　准则概览与核心概念</a><span>3</span></li>
+    <li class="toc-item"><a href="#c1s2">1.2　计税基础（第4-6条）</a><span>4</span></li>
+    <li class="toc-item"><a href="#c1s3">1.3　暂时性差异（第7-9条）</a><span>6</span></li>
+    <li class="toc-item"><a href="#c1s4">1.4　递延所得税确认（第10-15条）</a><span>8</span></li>
+    <li class="toc-item"><a href="#c1s5">1.5　递延所得税计量（第16-22条）</a><span>12</span></li>
+    <li class="toc-item"><a href="#c1s6">1.6　列报与披露（第23-25条）</a><span>15</span></li>
+
+    <li class="toc-chapter">第二章　《增值税会计处理规定》（财会[2016]22号）</li>
+    <li class="toc-item"><a href="#c2s1">2.1　规定概览与科目体系</a><span>17</span></li>
+    <li class="toc-item"><a href="#c2s2">2.2　采购业务账务处理</a><span>20</span></li>
+    <li class="toc-item"><a href="#c2s3">2.3　销售业务与视同销售</a><span>22</span></li>
+    <li class="toc-item"><a href="#c2s4">2.4　差额征税与出口退税</a><span>24</span></li>
+    <li class="toc-item"><a href="#c2s5">2.5　进项税额转出与月末结转</a><span>26</span></li>
+    <li class="toc-item"><a href="#c2s6">2.6　留抵退税与减免税处理</a><span>28</span></li>
+
+    <li class="toc-chapter">第三章　《企业会计准则第16号——政府补助》</li>
+    <li class="toc-item"><a href="#c3s1">3.1　准则概览与核心概念</a><span>30</span></li>
+    <li class="toc-item"><a href="#c3s2">3.2　与资产相关的政府补助</a><span>32</span></li>
+    <li class="toc-item"><a href="#c3s3">3.3　与收益相关的政府补助</a><span>34</span></li>
+    <li class="toc-item"><a href="#c3s4">3.4　财政贴息与政府补助退回</a><span>36</span></li>
+
+    <li class="toc-chapter">第四章　《企业会计准则解释第19号》（税务相关）</li>
+    <li class="toc-item"><a href="#c4s1">4.1　补偿性资产概述与确认</a><span>38</span></li>
+    <li class="toc-item"><a href="#c4s2">4.2　补偿性资产的计量与案例</a><span>40</span></li>
+
+    <li class="toc-chapter">附录</li>
+    <li class="toc-item"><a href="#appA">附录A　常用税务会计分录速查表</a><span>42</span></li>
+    <li class="toc-item"><a href="#appB">附录B　税会差异常见类型对照表</a><span>44</span></li>
+    <li class="toc-item"><a href="#appC">附录C　准则官方来源索引</a><span>46</span></li>
+  </ul>
+</div>
+
+<!-- ================================================================== -->
+<!-- CHAPTER 1: CAS 18 - INCOME TAX -->
+<!-- ================================================================== -->
+<div class="chapter-cover">
+  <div class="chapter-number">01</div>
+  <div class="chapter-cover-title">企业会计准则第18号<br>——所得税</div>
+  <div class="chapter-cover-meta">
+    <span>文号：财会[2006]3号</span><br>
+    <span>发布日期：2006年2月15日 | 施行日期：2007年1月1日</span><br>
+    <span>来源：财政部会计司 kjs.mof.gov.cn</span>
+  </div>
+  <div class="chapter-cover-line"></div>
+</div>
+
+<!-- 1.1 Overview -->
+<h1 id="c1s1">1.1　准则概览与核心概念</h1>
+
+<h2>准则定位</h2>
+<p>《企业会计准则第18号——所得税》规范的是<strong>企业所得税的会计处理</strong>，核心是解决<strong>"税会差异"</strong>问题——即会计准则下的账面价值与税法规定下的计税基础之间的差异。准则采用<strong>资产负债表债务法</strong>，按照资产负债观，以资产负债表为核心，通过比较资产/负债的账面价值与计税基础，确认递延所得税。</p>
+
+<table class="overview-table">
+  <tr><th>准则文号</th><td>财会[2006]3号</td></tr>
+  <tr><th>章节结构</th><td>总则（第1-3条）→ 计税基础（第4-6条）→ 暂时性差异（第7-9条）→ 确认（第10-15条）→ 计量（第16-22条）→ 列报（第23-25条）</td></tr>
+  <tr><th>核心方法</th><td>资产负债表债务法</td></tr>
+  <tr><th>适用税种</th><td>以应纳税所得额为基础的各种境内和境外税额（企业所得税）</td></tr>
+  <tr><th>不适用范围</th><td>政府补助的确认和计量（由CAS 16规范），但政府补助产生的暂时性差异的所得税影响按本准则处理</td></tr>
+</table>
+
+<h2>核心概念图谱</h2>
+<p>以下流程图梳理了所得税会计的完整逻辑链：</p>
+<div class="diagram-box">
+  <p style="font-size:10pt; line-height:2.5;">
+    <span class="flow-step">确定资产/负债的账面价值</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">确定资产/负债的计税基础</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">比较差额 = 暂时性差异</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">应纳税暂时性差异 → 递延所得税负债</span>
+    <br>
+    <span style="margin-left: 13em;"></span>
+    <span class="flow-arrow">↘</span>
+    <span class="flow-step">可抵扣暂时性差异 → 递延所得税资产</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">确认所得税费用</span>
+  </p>
+</div>
+
+<div class="formula-box">
+  <strong>所得税费用 = 当期所得税 ± 递延所得税</strong><br>
+  递延所得税 = (期末递延所得税负债 - 期初递延所得税负债) - (期末递延所得税资产 - 期初递延所得税资产)
+</div>
+
+<!-- 1.2 计税基础 -->
+<div class="pb"></div>
+<h1 id="c1s2">1.2　计税基础（第4-6条）</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第4-6条</div>
+  <p><strong>第四条</strong>　企业在取得资产、负债时，应当确定其计税基础。资产、负债的账面价值与其计税基础存在差异的，应当按照本准则规定确认所产生的递延所得税资产或递延所得税负债。</p>
+  <p><strong>第五条</strong>　资产的计税基础，是指企业收回资产账面价值过程中，计算应纳税所得额时按照税法规定可以自应税经济利益中抵扣的金额。</p>
+  <p><strong>第六条</strong>　负债的计税基础，是指负债的账面价值减去未来期间计算应纳税所得额时按照税法规定可予抵扣的金额。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>核心要点：</strong>计税基础是从"税务局的角度"看资产或负债的价值。</p>
+  <p><strong>资产的计税基础</strong> = 未来可税前扣除的金额。例如，一项固定资产原值100万，会计上按5年折旧每年20万，但税法允许加速折旧每年30万——此时账面价值（80万）与计税基础（70万）就产生了差异。</p>
+  <p><strong>负债的计税基础</strong> = 账面价值 - 未来可税前扣除的金额。最常见的是预计负债（如产品质量保证），账面价值100万，但税法规定实际发生时才能扣除，计税基础 = 100 - 100 = 0。</p>
+  <p><strong>公式记忆：</strong></p>
+  <p>• 资产计税基础 = 未来可税前扣除金额</p>
+  <p>• 负债计税基础 = 账面价值 - 未来可税前扣除金额</p>
+  <p>• 简单来说：计税基础就是"税务局承认的账面金额"。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-1] 固定资产折旧的税会差异</div>
+  <p class="case-scene">业务场景：</p>
+  <p>某大公司2025年12月购入一台生产设备，入账原值600万元，会计折旧采用年限平均法（残值率5%），按10年计提折旧。根据《企业所得税法》，该设备属于《环境保护专用设备企业所得税优惠目录》范围，可享受缩短折旧年限优惠，按6年计提折旧（税法允许加速折旧）。2026年末，分析其计税基础差异。</p>
+  <p><strong>计算过程：</strong></p>
+  <p>• 2026年会计折旧 = 600 × (1-5%) ÷ 10 = <span class="blue-highlight">57万元</span></p>
+  <p>• 2026年税法折旧 = 600 × (1-5%) ÷ 6 = <span class="blue-highlight">95万元</span></p>
+  <p>• 账面价值（2026年末）= 600 - 57 = <span class="blue-highlight">543万元</span></p>
+  <p>• 计税基础（2026年末）= 600 - 95 = <span class="blue-highlight">505万元</span></p>
+  <p>• 差异 = 543 - 505 = <span class="gold-highlight">38万元</span>（账面价值 > 计税基础 → 应纳税暂时性差异）</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th><th>说明</th></tr>
+    <tr><td class="dr">所得税费用</td><td>借</td><td>95,000</td><td>38万 × 25%</td></tr>
+    <tr><td class="cr">递延所得税负债</td><td>贷</td><td>95,000</td><td>确认递延所得税负债</td></tr>
+  </table>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-2] 预计负债的计税基础</div>
+  <p class="case-scene">业务场景：</p>
+  <p>某公司2026年度按销售额的2%计提产品质量保证预计负债，当年销售额为8,000万元，计提预计负债160万元。当年实际发生质保支出40万元。税法规定产品质量保证支出在实际发生时税前扣除。</p>
+  <p><strong>计算过程：</strong></p>
+  <p>• 账面价值（年末）= 160 - 40 = 120万元</p>
+  <p>• 计税基础 = 120 - 120（未来可扣除）= <span class="blue-highlight">0元</span></p>
+  <p>• 差异 = 120 - 0 = <span class="gold-highlight">120万元</span>（可抵扣暂时性差异）</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">递延所得税资产</td><td>借</td><td>300,000</td></tr>
+    <tr><td class="cr">所得税费用</td><td>贷</td><td>300,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666; margin-top:5px;">（120万 × 25% = 30万元）</p>
+</div>
+
+<!-- 1.3 暂时性差异 -->
+<div class="pb"></div>
+<h1 id="c1s3">1.3　暂时性差异（第7-9条）</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第7-9条</div>
+  <p><strong>第七条</strong>　暂时性差异，是指资产或负债的账面价值与其计税基础之间的差额；未作为资产和负债确认的项目，按照税法规定可以确定其计税基础的，该计税基础与其账面价值之间的差额也属于暂时性差异。按照暂时性差异对未来期间应税金额的影响，分为应纳税暂时性差异和可抵扣暂时性差异。</p>
+  <p><strong>第八条</strong>　应纳税暂时性差异，是指在确定未来收回资产或清偿负债期间的应纳税所得额时，将导致产生应税金额的暂时性差异。</p>
+  <p><strong>第九条</strong>　可抵扣暂时性差异，是指在确定未来收回资产或清偿负债期间的应纳税所得额时，将导致产生可抵扣金额的暂时性差异。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p>暂时性差异可以理解为"税务局和会计记账之间的时间差"，但这个差异在未来会转回。分成两类：</p>
+  <p><strong>应纳税暂时性差异：</strong>未来要多交税的差异。产生递延所得税负债。</p>
+  <p>• 资产账面价值 > 资产计税基础 → 应纳税暂时性差异（如加速折旧）</p>
+  <p>• 负债账面价值 < 负债计税基础 → 应纳税暂时性差异</p>
+  <p><strong>可抵扣暂时性差异：</strong>未来可以少交税的差异。产生递延所得税资产。</p>
+  <p>• 资产账面价值 < 资产计税基础 → 可抵扣暂时性差异</p>
+  <p>• 负债账面价值 > 负债计税基础 → 可抵扣暂时性差异（如预计负债）</p>
+  <p><strong>记忆口诀：</strong>"资大债小应纳税（负债），资小债大可抵扣（资产）"</p>
+</div>
+
+<table class="summary-table">
+  <tr><th>差异类型</th><th>资产特征</th><th>负债特征</th><th>确认项目</th><th>常见情形</th></tr>
+  <tr>
+    <td>应纳税暂时性差异</td>
+    <td>账面价值 &gt; 计税基础</td>
+    <td>账面价值 &lt; 计税基础</td>
+    <td>递延所得税负债</td>
+    <td>固定资产加速折旧、交易性金融资产公允价值上升、长期股权投资权益法下被投资方盈利</td>
+  </tr>
+  <tr>
+    <td>可抵扣暂时性差异</td>
+    <td>账面价值 &lt; 计税基础</td>
+    <td>账面价值 &gt; 计税基础</td>
+    <td>递延所得税资产</td>
+    <td>资产减值准备、预计负债、可抵扣亏损、预提费用、应付职工薪酬超税法限额</td>
+  </tr>
+</table>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-3] 坏账准备的暂时性差异完整计算</div>
+  <p class="case-scene">业务场景：</p>
+  <p>A集团2026年初应收账款账面余额为5,000万元，坏账准备余额为250万元（计提比例5%）。2026年度发生坏账损失180万元（已获税务机关核准税前扣除），年末应收账款余额6,000万元，继续按5%计提坏账准备。税法规定坏账准备不允许税前扣除（仅实际发生时可扣除）。企业所得税税率25%。</p>
+  <p><strong>计算分析：</strong></p>
+  <p>• 年初应收账款账面价值 = 5,000 - 250 = 4,750万；计税基础 = 5,000万（税法不认准备）</p>
+  <p>• 年初可抵扣暂时性差异 = 250万 → 递延所得税资产 = 62.5万</p>
+  <p>• 2026年核销坏账：借：坏账准备 180万，贷：应收账款 180万</p>
+  <p>• 年末应计提坏账 = 6,000 × 5% - (250 - 180) = 300 - 70 = 230万</p>
+  <p>• 年末坏账准备余额 = 300万，应收账款账面价值 = 5,700万</p>
+  <p>• 年末可抵扣暂时性差异 = 300万 → 递延所得税资产 = 75万</p>
+  <table class="entry-table">
+    <tr><th>分录</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td colspan="4"><strong>计提坏账：</strong></td></tr>
+    <tr><td class="dr">①</td><td class="dr">信用减值损失</td><td>借</td><td>2,300,000</td></tr>
+    <tr><td class="cr">①</td><td class="cr">坏账准备</td><td>贷</td><td>2,300,000</td></tr>
+    <tr><td colspan="4"><strong>调整递延所得税（75万 - 62.5万 = 12.5万增加）：</strong></td></tr>
+    <tr><td class="dr">②</td><td class="dr">递延所得税资产</td><td>借</td><td>125,000</td></tr>
+    <tr><td class="cr">②</td><td class="cr">所得税费用</td><td>贷</td><td>125,000</td></tr>
+  </table>
+</div>
+
+<div class="tip-box">
+  大公司账务中，坏账准备、存货跌价准备、固定资产减值准备等"八项准备"都会产生可抵扣暂时性差异，但需评估未来是否有足够应纳税所得额来抵扣。每年末应进行递延所得税资产的减值测试。
+</div>
+
+<!-- 1.4 递延所得税确认 -->
+<div class="pb"></div>
+<h1 id="c1s4">1.4　递延所得税确认（第10-15条）</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第10-13条（核心条款）</div>
+  <p><strong>第十条</strong>　企业应当将当期和以前期间应交未交的所得税确认为负债，将已支付的所得税超过应支付的部分确认为资产。存在应纳税暂时性差异或可抵扣暂时性差异的，应当按照本准则规定确认递延所得税负债或递延所得税资产。</p>
+  <p><strong>第十一条</strong>　除商誉初始确认及不影响会计利润和应纳税所得额的交易外，企业应当确认所有应纳税暂时性差异产生的递延所得税负债。</p>
+  <p><strong>第十三条</strong>　企业应当以很可能取得用来抵扣可抵扣暂时性差异的应纳税所得额为限，确认由可抵扣暂时性差异产生的递延所得税资产。</p>
+  <p><strong>第十五条</strong>　企业对于能够结转以后年度的可抵扣亏损和税款抵减，应当以很可能获得用来抵扣的未来应纳税所得额为限，确认相应的递延所得税资产。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>核心原则：递延所得税负债——"全面确认"原则</strong></p>
+  <p>凡有应纳税暂时性差异，原则上都要确认递延所得税负债，仅有两个例外：①商誉初始确认；②交易既不涉及企业合并，又既不影响会计利润也不影响应纳税所得额。</p>
+  <p><strong>核心原则：递延所得税资产——"有条件确认"原则</strong></p>
+  <p>确认递延所得税资产有严格的前提——"很可能"（＞50%概率）获得足够的未来应纳税所得额。这意味着：①亏损企业如未来盈利不确定，不能确认递延所得税资产；②需要提供未来盈利预测等证据支持。</p>
+  <p><strong>关键判断标准："很可能"</strong></p>
+  <p>实务中判断"很可能"需要综合考虑：①企业历史盈利记录；②经批准的财务预算和经营计划；③已签订的不可撤销合同；④影响未来盈利的特殊事项。这直接影响资产负债表上递延所得税资产的金额，进而影响利润表中的所得税费用。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-4] 可抵扣亏损的递延所得税资产确认</div>
+  <p class="case-scene">业务场景：</p>
+  <p>B科技公司2024-2026年度经营情况如下：</p>
+  <table class="entry-table">
+    <tr><th>年度</th><th>应纳税所得额</th><th>累计未弥补亏损</th><th>备注</th></tr>
+    <tr><td>2024</td><td style="color:#c62828">-800万</td><td>800万</td><td>初创期研发投入大</td></tr>
+    <tr><td>2025</td><td style="color:#c62828">-300万</td><td>1,100万</td><td>市场拓展期</td></tr>
+    <tr><td>2026</td><td style="color:#1a6e1a">+500万</td><td>600万</td><td>扭亏为盈</td></tr>
+  </table>
+  <p>2026年末，管理层编制了2027-2030年盈利预测，预计每年盈利约400万元。所得税税率25%，亏损弥补期5年。</p>
+  <p><strong>分析：</strong></p>
+  <p>• 2024年亏损800万，可弥补至2029年（5年）</p>
+  <p>• 2025年亏损300万，可弥补至2030年（5年）</p>
+  <p>• 2026年已弥补500万后，剩余600万未弥补亏损</p>
+  <p>• 未来4年预计盈利400万/年 = 1,600万 > 600万，满足"很可能"条件</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">递延所得税资产</td><td>借</td><td>1,500,000</td></tr>
+    <tr><td class="cr">所得税费用</td><td>贷</td><td>1,500,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">（600万 × 25% = 150万）</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-5] 递延所得税资产减值转回</div>
+  <p class="case-scene">业务场景：</p>
+  <p>C公司2024年末确认了因可抵扣亏损（2,000万）产生的递延所得税资产500万（2,000万×25%）。2025年经营恶化，预计未来5年累计应纳税所得额仅为300万，远不足以抵扣2,000万亏损。2026年业务好转，签订了重大合同，未来预计可产生1,500万应纳税所得额。</p>
+  <p><strong>分析：</strong></p>
+  <p><strong>2025年末减值：</strong>可抵扣金额上限 = 300万 × 25% = 75万，需减值425万</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">所得税费用</td><td>借</td><td>4,250,000</td></tr>
+    <tr><td class="cr">递延所得税资产</td><td>贷</td><td>4,250,000</td></tr>
+  </table>
+  <p><strong>2026年末转回：</strong>可抵扣金额上限 = 1,500万 × 25% = 375万，可以转回300万（至375万）</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">递延所得税资产</td><td>借</td><td>3,000,000</td></tr>
+    <tr><td class="cr">所得税费用</td><td>贷</td><td>3,000,000</td></tr>
+  </table>
+</div>
+
+<div class="warn-box">
+  大公司财经部门特别关注：递延所得税资产的确认和减值测试是审计师重点核查领域。企业需保留充分的盈利预测支持文件。股市或经营环境突变时，已确认的大额递延所得税资产可能面临减值风险，直接影响当期利润。
+</div>
+
+<!-- 1.5 递延所得税计量 -->
+<div class="pb"></div>
+<h1 id="c1s5">1.5　递延所得税计量（第16-22条）</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第17-20条（核心条款）</div>
+  <p><strong>第十七条</strong>　资产负债表日，对于递延所得税资产和递延所得税负债，应当根据税法规定，按照预期收回该资产或清偿该负债期间的<strong>适用税率</strong>计量。适用税率发生变化的，应对已确认的递延所得税资产和递延所得税负债进行重新计量，除直接在所有者权益中确认的交易或者事项产生的以外，应当将其影响数计入变化当期的所得税费用。</p>
+  <p><strong>第十九条</strong>　企业不应当对递延所得税资产和递延所得税负债进行折现。</p>
+  <p><strong>第二十條</strong>　资产负债表日，企业应当对递延所得税资产的账面价值进行复核。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>计量四要素：</strong></p>
+  <p>① <span class="gold-highlight">适用税率</span>：用"预期转回期间的税率"，而非当前税率。如果企业知道未来税率将变化（如高新技术企业资质到期），必须用未来的税率计量。</p>
+  <p>② <span class="gold-highlight">不折现</span>：不管暂时性差异多少年后转回，都不需要计算时间价值。这是简化处理。</p>
+  <p>③ <span class="gold-highlight">税率变动影响</span>：税率变了，已确认的递延所得税要重新算，差异走"所得税费用"（除非是与所有者权益相关的）。</p>
+  <p>④ <span class="gold-highlight">每年复核</span>：递延所得税资产至少每年末复核一次，不够减就减值。</p>
+  <p><strong>对账务会计的影响：</strong></p>
+  <p>大公司涉及不同税率（如母公司25%、子公司高新15%、西部子公司15%等），在合并报表层面需要分别按各自预期税率计量递延所得税。当子公司税率发生变化（如高新资质到期），需要重新计量，这是季度/年度结账中的重点工作。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-6] 税率变动下的递延所得税重新计量</div>
+  <p class="case-scene">业务场景：</p>
+  <p>D制造公司2023年取得高新技术企业资格（税率15%），有效期3年（2023-2025）。2024年末有因固定资产加速折旧产生的应纳税暂时性差异1,000万元（预计2027年转回），确认递延所得税负债150万（1,000万×15%）。2025年末高新资格到期，未通过复审，2026年起适用25%税率。</p>
+  <p><strong>2025年末重新计量：</strong></p>
+  <p>差异预计2027年转回，适用25%税率。</p>
+  <p>应确认递延所得税负债 = 1,000万 × 25% = 250万</p>
+  <p>差异 = 250万 - 150万 = 100万（调增）</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th><th>说明</th></tr>
+    <tr><td class="dr">所得税费用</td><td>借</td><td>1,000,000</td><td>税率变动影响</td></tr>
+    <tr><td class="cr">递延所得税负债</td><td>贷</td><td>1,000,000</td><td>调增负债</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">注意：如果暂时性差异是由其他综合收益产生的（如其他权益工具投资公允价值变动），则税率变动的影响也应计入其他综合收益而非所得税费用。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-7] 合并报表层面的递延所得税综合计算</div>
+  <p class="case-scene">业务场景：</p>
+  <p>E集团2026年末合并报表层面涉及以下暂时性差异（单位：万元）：</p>
+  <table class="entry-table">
+    <tr><th>项目</th><th>账面价值</th><th>计税基础</th><th>差异</th><th>类型</th><th>税率</th></tr>
+    <tr><td>固定资产（加速折旧）</td><td>800</td><td>500</td><td>300</td><td>应纳税</td><td>25%</td></tr>
+    <tr><td>存货跌价准备</td><td>200</td><td>260</td><td>60</td><td>可抵扣</td><td>25%</td></tr>
+    <tr><td>应收账款坏账准备</td><td>400</td><td>550</td><td>150</td><td>可抵扣</td><td>25%</td></tr>
+    <tr><td>未弥补亏损</td><td>-</td><td>-</td><td>200</td><td>可抵扣</td><td>15%（高新子公司）</td></tr>
+    <tr><td>交易性金融资产公允价值上升</td><td>500</td><td>300</td><td>200</td><td>应纳税</td><td>25%</td></tr>
+  </table>
+  <p><strong>综合计算：</strong></p>
+  <p>应纳税暂时性差异合计 = 300 + 200 = 500万 → 递延所得税负债 = 500 × 25% = <span class="blue-highlight">125万</span></p>
+  <p>可抵扣暂时性差异（25%税率部分）= 60 + 150 = 210万 → 递延所得税资产 = 210 × 25% = <span class="blue-highlight">52.5万</span></p>
+  <p>可抵扣暂时性差异（15%税率部分）= 200万 → 递延所得税资产 = 200 × 15% = <span class="blue-highlight">30万</span></p>
+  <p>递延所得税资产合计 = 52.5 + 30 = <span class="blue-highlight">82.5万</span></p>
+  <p>递延所得税负债 - 递延所得税资产 = 125 - 82.5 = <span class="gold-highlight">42.5万</span>（递延所得税费用）</p>
+</div>
+
+<div class="tip-box">
+  合并报表中不同纳税主体可能适用不同税率，需要分别计算。实务中可建立"递延所得税台账"，按暂时性差异类别和税率分类登记，便于底稿编制和审计应对。
+</div>
+
+<!-- 1.6 列报 -->
+<div class="pb"></div>
+<h1 id="c1s6">1.6　列报与披露（第23-25条）</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第23-25条</div>
+  <p><strong>第二十三条</strong>　递延所得税资产和递延所得税负债应当分别作为非流动资产和非流动负债在资产负债表中列示。</p>
+  <p><strong>第二十四条</strong>　所得税费用应当在利润表中单独列示。</p>
+  <p><strong>第二十五条</strong>　企业应当在附注中披露与所得税有关的下列信息：（一）所得税费用（收益）的主要组成部分；（二）所得税费用（收益）与会计利润关系的说明；（三）未确认递延所得税资产的可抵扣暂时性差异、可抵扣亏损的金额；（四）对每一类暂时性差异和可抵扣亏损，在列报期间确认的递延所得税资产或递延所得税负债的金额；（五）未确认递延所得税负债的、与对子公司、联营企业及合营企业投资相关的暂时性差异金额。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>三大关键要求：</strong></p>
+  <p>① <strong>净额不得抵销</strong>：递延所得税资产和递延所得税负债不能互相抵销后以净额列示——必须分别列在非流动资产和非流动负债中。这意味着即使同一公司同时有10亿递延所得税资产和8亿递延所得税负债，资产负债表上也要同时展示这两笔，不能只列2亿净额。</p>
+  <p>② <strong>利润表单独列示</strong>：所得税费用在利润表上单列一行。合并利润表中的所得税费用由当期所得税+递延所得税两部分构成。</p>
+  <p>③ <strong>附注披露最烦琐</strong>：需要披露所得税费用调节表（从会计利润到所得税费用的"桥接表"）——这是审计时必须提供的底稿材料。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 1-8] 所得税费用调节表（附注披露）</div>
+  <p class="case-scene">业务场景：</p>
+  <p>F公司2026年度合并利润表：利润总额5,000万元，所得税费用列示为1,150万元。按25%法定税率计算的"预期所得税费用"为1,250万元。附注中需披露差异原因：</p>
+  <table class="entry-table">
+    <tr><th>项目</th><th>金额（万元）</th></tr>
+    <tr><td>利润总额</td><td>5,000</td></tr>
+    <tr><td>按25%计算的预期所得税费用</td><td>1,250</td></tr>
+    <tr><td>子公司适用不同税率的影响（15%高新）</td><td>-80</td></tr>
+    <tr><td>不可抵扣的费用（业务招待费超支等）</td><td>+30</td></tr>
+    <tr><td>免税收入（国债利息等）</td><td>-20</td></tr>
+    <tr><td>研发费用加计扣除的影响</td><td>-45</td></tr>
+    <tr><td>以前年度未确认递延所得税资产的可抵扣亏损本期转回</td><td>-15</td></tr>
+    <tr><td>税率变动对递延所得税的影响</td><td>+30</td></tr>
+    <tr><td style="font-weight:bold">所得税费用</td><td style="font-weight:bold">1,150</td></tr>
+  </table>
+</div>
+
+<div class="pb"></div>
+<h2>第一章 要点回顾</h2>
+<div class="diagram-box">
+  <p style="font-size:9.5pt; line-height:2.2; text-align:left;">
+    <strong>一、核心公式</strong><br>
+    所得税费用 = 当期所得税 + 递延所得税费用<br>
+    递延所得税费用 = Δ递延所得税负债 - Δ递延所得税资产<br><br>
+    <strong>二、计税基础</strong><br>
+    资产计税基础 = 未来可税前扣除金额<br>
+    负债计税基础 = 账面价值 - 未来可税前扣除金额<br><br>
+    <strong>三、暂时性差异</strong><br>
+    应纳税（负债）← 资大债小 → 可抵扣（资产）← 资小债大<br><br>
+    <strong>四、计量要点</strong><br>
+    · 用预期转回期间的适用税率 · 不折现 · 税率变动要重新计量 · 资产每年减值测试<br><br>
+    <strong>五、大公司特别关注</strong><br>
+    · 合并报表不同主体税率 · 递延所得税资产减值风险 · 附注披露的所得税费用调节表
+  </p>
+</div>
+
+<!-- ================================================================== -->
+<!-- CHAPTER 2: VAT ACCOUNTING -->
+<!-- ================================================================== -->
+<div class="chapter-cover">
+  <div class="chapter-number">02</div>
+  <div class="chapter-cover-title">增值税会计处理规定</div>
+  <div class="chapter-cover-meta">
+    <span>文号：财会[2016]22号</span><br>
+    <span>发布日期：2016年12月3日 | 施行日期：自发布之日起</span><br>
+    <span>来源：财政部会计司 kjs.mof.gov.cn</span>
+  </div>
+  <div class="chapter-cover-line"></div>
+</div>
+
+<h1 id="c2s1">2.1　规定概览与科目体系</h1>
+
+<h2>背景与意义</h2>
+<p>《增值税会计处理规定》是为配合2016年全面"营改增"而制定的专门规范，重新定义和规范了增值税从会计科目设置到账务处理再到报表列示的全链条。对账务会计而言，这是日常工作接触频率最高的规范。</p>
+
+<table class="overview-table">
+  <tr><th>规定文号</th><td>财会[2016]22号</td></tr>
+  <tr><th>废止文件</th><td>财会[2012]13号、财会[2013]24号</td></tr>
+  <tr><th>核心变化</th><td>1) 科目前置调整（"营业税金及附加"→"税金及附加"） 2) 新增10个增值税二级明细科目 3) 规范差额征税、留抵退税、视同销售等全套账务</td></tr>
+  <tr><th>章节结构</th><td>一、会计科目及专栏设置 → 二、账务处理（采购/销售/差额/出口/进项转出/月末结转/缴纳/留抵/税控/小微）→ 三、财务报表列示 → 四、附则</td></tr>
+</table>
+
+<h2>增值税会计科目全景图</h2>
+<div class="diagram-box">
+  <p style="font-size:9pt; line-height:2.2; text-align:left;">
+    <strong>应交税费——应交增值税（10个专栏）：</strong><br>
+    <span style="color:#1a6e1a">【借方专栏】</span> 进项税额 | 销项税额抵减 | 已交税金 | 转出未交增值税 | 减免税款 | 出口抵减内销产品应纳税额<br>
+    <span style="color:#8b0000">【贷方专栏】</span> 销项税额 | 出口退税 | 进项税额转出 | 转出多交增值税<br><br>
+    <strong>应交税费下10个二级明细科目：</strong><br>
+    应交增值税 | 未交增值税 | 预交增值税 | 待抵扣进项税额 | 待认证进项税额 | 待转销项税额 | 增值税留抵税额 | 简易计税 | 转让金融商品应交增值税 | 代扣代交增值税
+  </p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p>大公司日常增值税核算最需要记住的是"三组关系"：</p>
+  <p><strong>① 应交增值税 = 销项税额 - 进项税额（可抵扣部分）</strong></p>
+  <p>月结时判断：销项＞进项 → 差额转入"未交增值税"；进项＞销项 → 留抵，不转。</p>
+  <p><strong>② 进项税额 ≠ 一定可以抵扣</strong></p>
+  <p>专用发票取得后先进入"待认证进项税额"，认证后转入"进项税额"。用于免税/简易计税/集体福利等的进项不得抵扣，需做"进项税额转出"。</p>
+  <p><strong>③ 预交增值税 ≠ 最终缴纳金额</strong></p>
+  <p>房地产、建筑服务等行业需要先预缴增值税，然后根据纳税义务发生时间来抵减。</p>
+</div>
+
+<div class="tip-box">
+  大公司通常使用ERP系统自动处理增值税科目，但月末人工核对应关注：1）"应交增值税"科目余额是否合理；2）待认证进项税额是否及时认证；3）销项税额抵减是否正确归集。
+</div>
+
+<!-- 2.2 采购业务 -->
+<div class="pb"></div>
+<h1 id="c2s2">2.2　采购业务账务处理</h1>
+
+<div class="original-box">
+  <div class="label">[规定原文] 第二（一）条</div>
+  <p><strong>1. 采购等业务进项税额允许抵扣的账务处理。</strong>一般纳税人购进货物、加工修理修配劳务、服务、无形资产或不动产，按应计入相关成本费用或资产的金额，借记"在途物资"或"原材料"、"库存商品"、"生产成本"、"无形资产"、"固定资产"、"管理费用"等科目，按当月已认证的可抵扣增值税额，借记"应交税费——应交增值税（进项税额）"科目，按当月未认证的可抵扣增值税额，借记"应交税费——待认证进项税额"科目，按应付或实际支付的金额，贷记"应付账款"、"应付票据"、"银行存款"等科目。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>核心流程：发票取得 → 认证 → 抵扣</strong></p>
+  <p>收到专票当月未认证：进项税先进"待认证进项税额"</p>
+  <p>认证通过当月：从"待认证进项税额"转入"应交增值税（进项税额）"</p>
+  <p><strong>大公司常见情形：</strong>月末集中收到大量发票，来不及在当月全部认证，需要准确区分"已认证"和"待认证"，月底ERP需要做特殊处理确保分录正确。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-1] 采购业务含未认证发票</div>
+  <p class="case-scene">业务场景：</p>
+  <p>某大公司A事业部2026年6月25日购入原材料一批，取得增值税专用发票，不含税金额100万元，税额13万元，价税合计113万元，款已支付。截止6月30日结账时，该发票尚未在税务平台认证。</p>
+  <table class="entry-table">
+    <tr><th>分录</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td colspan="4"><strong>6月25日 采购入库（发票未认证）：</strong></td></tr>
+    <tr><td class="dr">①</td><td class="dr">原材料</td><td>借</td><td>1,000,000</td></tr>
+    <tr><td class="dr">①</td><td class="dr">应交税费——待认证进项税额</td><td>借</td><td>130,000</td></tr>
+    <tr><td class="cr">①</td><td class="cr">银行存款</td><td>贷</td><td>1,130,000</td></tr>
+    <tr><td colspan="4"><strong>7月5日 发票认证通过后：</strong></td></tr>
+    <tr><td class="dr">②</td><td class="dr">应交税费——应交增值税（进项税额）</td><td>借</td><td>130,000</td></tr>
+    <tr><td class="cr">②</td><td class="cr">应交税费——待认证进项税额</td><td>贷</td><td>130,000</td></tr>
+  </table>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-2] 进项税额不得抵扣——用于集体福利</div>
+  <p class="case-scene">业务场景：</p>
+  <p>B公司2026年3月购入一批食用油，取得增值税专用发票，不含税金额5万元，税额0.65万元。该批食用油全部用于发放员工节日福利（集体福利）。进项税额不得抵扣。</p>
+  <table class="entry-table">
+    <tr><th>分录</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td colspan="4"><strong>购入时（先全额计入待认证）：</strong></td></tr>
+    <tr><td class="dr">①</td><td class="dr">库存商品</td><td>借</td><td>50,000</td></tr>
+    <tr><td class="dr">①</td><td class="dr">应交税费——待认证进项税额</td><td>借</td><td>6,500</td></tr>
+    <tr><td class="cr">①</td><td class="cr">银行存款</td><td>贷</td><td>56,500</td></tr>
+    <tr><td colspan="4"><strong>认证后：先转入进项，再做转出：</strong></td></tr>
+    <tr><td class="dr">②</td><td class="dr">应交税费——应交增值税（进项税额）</td><td>借</td><td>6,500</td></tr>
+    <tr><td class="cr">②</td><td class="cr">应交税费——待认证进项税额</td><td>贷</td><td>6,500</td></tr>
+    <tr><td class="dr">③</td><td class="dr">管理费用——福利费</td><td>借</td><td>6,500</td></tr>
+    <tr><td class="cr">③</td><td class="cr">应交税费——应交增值税（进项税额转出）</td><td>贷</td><td>6,500</td></tr>
+    <tr><td colspan="4"><strong>实际发放：</strong></td></tr>
+    <tr><td class="dr">④</td><td class="dr">应付职工薪酬——非货币性福利</td><td>借</td><td>56,500</td></tr>
+    <tr><td class="cr">④</td><td class="cr">库存商品</td><td>贷</td><td>50,000</td></tr>
+  </table>
+</div>
+
+<div class="warn-box">
+  用于简易计税、免税项目、集体福利、个人消费的进项税额不得抵扣！大公司涉及多种业务并存（如既有一半计税业务又有简易计税项目），进项税额需合理分摊，无法划分的按照销售额比例计算转出金额。
+</div>
+
+<!-- 2.3 销售业务 -->
+<div class="pb"></div>
+<h1 id="c2s3">2.3　销售业务与视同销售</h1>
+
+<div class="original-box">
+  <div class="label">[规定原文] 第二（二）条</div>
+  <p><strong>1. 销售业务的账务处理。</strong>企业销售货物、加工修理修配劳务、服务、无形资产或不动产，应当按应收或已收的金额，借记"应收账款"、"应收票据"、"银行存款"等科目，按取得的收入金额，贷记"主营业务收入"等科目，按现行增值税制度规定计算的销项税额，贷记"应交税费——应交增值税（销项税额）"或"应交税费——简易计税"科目。</p>
+  <p><strong>2. 视同销售的账务处理。</strong>企业发生税法上视同销售的行为，应当按照企业会计准则制度相关规定进行相应的会计处理，并按照现行增值税制度规定计算的销项税额，借记"应付职工薪酬"、"利润分配"等科目，贷记"应交税费——应交增值税（销项税额）"等科目。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>关键要点——"待转销项税额"的使用场景：</strong></p>
+  <p>当会计确认收入的时点 <strong>早于</strong> 增值税纳税义务发生时点时，销项税额先挂在"待转销项税额"（贷方），待纳税义务发生时再转入"销项税额"。</p>
+  <p>当增值税纳税义务发生时点 <strong>早于</strong> 会计确认收入时点时，先确认销项税额和应收账款，待会计收入确认时再冲回应收账款。</p>
+  <p><strong>大公司典型场景：</strong>建筑企业按照履约进度确认收入（会计）在先，但纳税义务按开票或收款时点（税务）在后，就会用到"待转销项税额"。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-3] 会计收入确认早于纳税义务发生——建筑服务</div>
+  <p class="case-scene">业务场景：</p>
+  <p>C建筑工程公司2026年6月按履约进度（完工百分比30%）确认某项目收入1,500万元（含税），但按合同约定，向业主办理工程结算的时间为8月，增值税纳税义务在结算时发生。增值税税率9%。</p>
+  <table class="entry-table">
+    <tr><th>分录</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td colspan="4"><strong>6月底 按履约进度确认收入：</strong></td></tr>
+    <tr><td class="dr">①</td><td class="dr">合同结算——收入结转</td><td>借</td><td>15,000,000</td></tr>
+    <tr><td class="cr">①</td><td class="cr">主营业务收入</td><td>贷</td><td>13,761,468</td></tr>
+    <tr><td class="cr">①</td><td class="cr">应交税费——待转销项税额</td><td>贷</td><td>1,238,532</td></tr>
+    <tr><td colspan="4"><strong>8月 办理结算，纳税义务发生：</strong></td></tr>
+    <tr><td class="dr">②</td><td class="dr">应收账款</td><td>借</td><td>15,000,000</td></tr>
+    <tr><td class="cr">②</td><td class="cr">合同结算——价款结算</td><td>贷</td><td>15,000,000</td></tr>
+    <tr><td class="dr">③</td><td class="dr">应交税费——待转销项税额</td><td>借</td><td>1,238,532</td></tr>
+    <tr><td class="cr">③</td><td class="cr">应交税费——应交增值税（销项税额）</td><td>贷</td><td>1,238,532</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">不含税收入 = 1500 ÷ 1.09 = 1,376.15万；销项税额 = 1500 - 1376.15 = 123.85万</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-4] 视同销售——将自产产品用于职工福利</div>
+  <p class="case-scene">业务场景：</p>
+  <p>D电子公司2026年中秋节将自产电子产品（成本80万元，市场价100万元不含税）发放给全体员工作为节日福利。增值税税率13%。</p>
+  <p><strong>分析：</strong>将自产货物用于集体福利，增值税视同销售，需按市场价计算销项税额。</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">应付职工薪酬——非货币性福利</td><td>借</td><td>1,130,000</td></tr>
+    <tr><td class="cr">主营业务收入</td><td>贷</td><td>1,000,000</td></tr>
+    <tr><td class="cr">应交税费——应交增值税（销项税额）</td><td>贷</td><td>130,000</td></tr>
+    <tr><td style="text-align:center; color:#999;" colspan="3">（结转成本略）</td></tr>
+  </table>
+</div>
+
+<div class="warn-box">
+  大公司常见的视同销售情形：①将货物交付他人代销；②销售代销货物；③设有两个以上机构并跨县市移送货物；④将自产/委托加工货物用于非应税项目、集体福利或个人消费；⑤将自产/委托加工/购进货物用于投资、分配、赠送。务必逐月逐笔检查是否有遗漏。
+</div>
+
+<!-- 2.4 差额征税与出口退税 -->
+<div class="pb"></div>
+<h1 id="c2s4">2.4　差额征税与出口退税</h1>
+
+<div class="original-box">
+  <div class="label">[规定原文] 第二（三）、（四）条</div>
+  <p><strong>差额征税：</strong>按现行增值税制度规定企业发生相关成本费用允许扣减销售额的，发生成本费用时，按应付或实际支付的金额，借记"主营业务成本"、"存货"、"工程施工"等科目，贷记"应付账款"等科目。待取得合规增值税扣税凭证且纳税义务发生时，按照允许抵扣的税额，借记"应交税费——应交增值税（销项税额抵减）"，贷记"主营业务成本"等科目。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>差额征税的核心：</strong>用"销项税额抵减"这个借方专栏来削减销项税额。并不是直接少确认销项税额，而是先全额确认销项，再通过"销项税额抵减"冲回。</p>
+  <p><strong>常见差额征税情形：</strong>旅游服务（扣除住宿费、餐饮费、交通费等）、劳务派遣（扣除代付工资社保等）、建筑服务分包、金融商品转让等。</p>
+  <p><strong>出口退税的核心：</strong>通过"出口退税"（贷方专栏）和"出口抵减内销产品应纳税额"（借方专栏）两个科目来核算。未实行免抵退办法的，使用"应收出口退税款"科目。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-5] 差额征税——旅游服务</div>
+  <p class="case-scene">业务场景：</p>
+  <p>E旅行社（一般纳税人）2026年7月组织一个旅行团，收取团费含税金额53万元。为团员支付住宿费21.2万元（含税，取得专票）、餐饮费10.6万元（含税，普通发票）、交通费5.3万元（含税，专票）。增值税税率6%，差额征税。</p>
+  <p><strong>计算：</strong></p>
+  <p>不含税销售额 = (53 - 21.2 - 10.6 - 5.3) ÷ 1.06 = 15.9 ÷ 1.06 = <span class="blue-highlight">15万元</span></p>
+  <p>销项税额 = 15万 × 6% = <span class="blue-highlight">0.9万元</span></p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">银行存款</td><td>借</td><td>530,000</td></tr>
+    <tr><td class="cr">主营业务收入</td><td>贷</td><td>500,000</td></tr>
+    <tr><td class="cr">应交税费——应交增值税（销项税额）</td><td>贷</td><td>30,000</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:#999;">（支付成本费用分录略）</td></tr>
+    <tr><td class="dr">应交税费——应交增值税（销项税额抵减）</td><td>借</td><td>21,000</td></tr>
+    <tr><td class="cr">主营业务成本</td><td>贷</td><td>21,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">销项税额 = 53/1.06×6% = 3万；销项税额抵减 = (21.2+10.6+5.3)/1.06×6% = 2.1万；实际应交增值税 = 3-2.1 = 0.9万</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-6] 出口退税——免抵退办法</div>
+  <p class="case-scene">业务场景：</p>
+  <p>F制造公司（一般纳税人，有出口业务）2026年8月：内销货物不含税收入500万元（税率13%），出口货物FOB价格200万元（退税率10%），当月进项税额合计120万元（含内销和出口）。征税率13%，退税率10%。</p>
+  <p><strong>计算过程：</strong></p>
+  <p>① 当期应纳税额 = 500×13% - [120 - 200×(13%-10%)] = 65 - (120 - 6) = 65 - 114 = <span style="color:#c62828">-49万元</span>（期末留抵）</p>
+  <p>② 出口货物"免抵退"税额 = 200×10% = 20万元</p>
+  <p>③ 比较：留抵49万 > 免抵退20万 → 应退税额 = 20万，免抵税额 = 0</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td colspan="3"><strong>征退税差额计入成本：</strong></td></tr>
+    <tr><td class="dr">主营业务成本</td><td>借</td><td>60,000</td></tr>
+    <tr><td class="cr">应交税费——应交增值税（进项税额转出）</td><td>贷</td><td>60,000</td></tr>
+    <tr><td colspan="3"><strong>计算应退税额/免抵额：</strong></td></tr>
+    <tr><td class="dr">应收出口退税款</td><td>借</td><td>200,000</td></tr>
+    <tr><td class="cr">应交税费——应交增值税（出口退税）</td><td>贷</td><td>200,000</td></tr>
+    <tr><td colspan="3"><strong>实际收到退税：</strong></td></tr>
+    <tr><td class="dr">银行存款</td><td>借</td><td>200,000</td></tr>
+    <tr><td class="cr">应收出口退税款</td><td>贷</td><td>200,000</td></tr>
+  </table>
+</div>
+
+<!-- 2.5 进项转出与月末结转 -->
+<div class="pb"></div>
+<h1 id="c2s5">2.5　进项税额转出与月末结转</h1>
+
+<div class="original-box">
+  <div class="label">[规定原文] 第二（五）、（六）条</div>
+  <p><strong>（五）进项税额抵扣情况发生改变的账务处理。</strong>因发生非正常损失或改变用途等，原已计入进项税额、待抵扣进项税额或待认证进项税额，但按现行增值税制度规定不得从销项税额中抵扣的，借记"待处理财产损溢"、"应付职工薪酬"、"固定资产"、"无形资产"等科目，贷记"应交税费——应交增值税（进项税额转出）"等科目。</p>
+  <p><strong>（六）月末转出多交增值税和未交增值税的账务处理。</strong>月度终了，企业应当将当月应交未交或多交的增值税自"应交增值税"明细科目转入"未交增值税"明细科目。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>进项税额转出的触发条件：</strong></p>
+  <p>① <strong>非正常损失</strong>（因管理不善造成被盗/丢失/霉烂变质等）：需将已抵扣的进项税额转出——自然灾害损失则不需要转出（注意区分）。</p>
+  <p>② <strong>改变用途</strong>：原用于应税项目的货物转用于免税/简易计税/集体福利等，需做进项转出。反之，原用于不得抵扣项目的资产改变用途用于可抵扣项目，可按净值计算可抵扣进项并转入。</p>
+  <p><strong>月末结转规则：</strong></p>
+  <p>月末计算"应交增值税"科目余额（销项 - 进项），若为正数（应交未交），转入"未交增值税"贷方；若为负数（多交/留抵），不强制结转。</p>
+  <p><strong>注意：</strong>进项/销项专栏不单独结转，留存于明细账。通过"转出未交增值税"/"转出多交增值税"过渡。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-7] 非正常损失——存货毁损的进项税额转出</div>
+  <p class="case-scene">业务场景：</p>
+  <p>G公司2026年7月因仓库管理不善导致一批原材料被雨水浸泡霉烂变质，该批原材料账面成本50万元，对应进项税额6.5万元已全额认证抵扣。尚未确定保险理赔和责任赔偿金额。</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">待处理财产损溢</td><td>借</td><td>565,000</td></tr>
+    <tr><td class="cr">原材料</td><td>贷</td><td>500,000</td></tr>
+    <tr><td class="cr">应交税费——应交增值税（进项税额转出）</td><td>贷</td><td>65,000</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:#999;">（待查明原因后，按责任人或保险赔款转入其他应收款，剩余差额进管理费用）</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#c62828;"><strong>▲ 注意区分：</strong>自然灾害（地震、洪水等）造成的损失不需要进项税额转出；只有因管理不善造成的被盗、丢失、霉烂变质才需要转出。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-8] 月末增值税结转</div>
+  <p class="case-scene">业务场景：</p>
+  <p>H公司2026年8月末"应交增值税"明细科目各专栏余额：</p>
+  <p>• 进项税额（借方）：200万元</p>
+  <p>• 销项税额（贷方）：350万元</p>
+  <p>• 进项税额转出（贷方）：5万元</p>
+  <p>• 已交税金（借方）：30万元</p>
+  <p>• 销项税额抵减（借方）：0元</p>
+  <p><strong>计算：</strong>应交增值税 = 350 + 5 - 200 - 30 = <span class="blue-highlight">125万元</span>（应交未交）</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">应交税费——应交增值税（转出未交增值税）</td><td>借</td><td>1,250,000</td></tr>
+    <tr><td class="cr">应交税费——未交增值税</td><td>贷</td><td>1,250,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">次月实际缴纳时：借：应交税费——未交增值税 125万，贷：银行存款 125万</p>
+</div>
+
+<div class="tip-box">
+  大公司通常有多个纳税主体或分支机构，月末结转前应编制增值税汇总计算表，核对各主体进/销项税额，确保与增值税申报表一致后再统一结转。
+</div>
+
+<!-- 2.6 留抵退税 -->
+<div class="pb"></div>
+<h1 id="c2s6">2.6　留抵退税与减免税处理</h1>
+
+<div class="original-box">
+  <div class="label">[规定原文 + 财政部会计司解读]</div>
+  <p><strong>留抵退税（财政部会计司2022年解读）：</strong>企业收到税务机关退还的增值税期末留抵税额，应当冲减"应交税费——增值税留抵税额"科目。收到退税款时，借记"银行存款"科目，贷记"应交税费——增值税留抵税额"科目。</p>
+  <p><strong>减免增值税：</strong>对于当期直接减免的增值税，借记"应交税费——应交增值税（减免税款）"科目，贷记损益类相关科目（如"其他收益"）。</p>
+  <p><strong>小微企业免征：</strong>小微企业在取得销售收入时先计提应交增值税，达到免税条件时转入当期损益（其他收益）。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-9] 增值税留抵退税</div>
+  <p class="case-scene">业务场景：</p>
+  <p>K制造公司2026年5月符合增值税留抵退税条件，向税务机关申请退还增量留抵税额。经税务机关核准，退还留抵税额80万元，5月20日款项到账。</p>
+  <table class="entry-table">
+    <tr><th>分录</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td colspan="4"><strong>收到退税款项：</strong></td></tr>
+    <tr><td class="dr">①</td><td class="dr">银行存款</td><td>借</td><td>800,000</td></tr>
+    <tr><td class="cr">①</td><td class="cr">应交税费——增值税留抵税额</td><td>贷</td><td>800,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">留抵退税不涉及损益，仅调整资产（银行存款增加）和负债（应交税费减少）。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 2-10] 增值税加计抵减</div>
+  <p class="case-scene">业务场景：</p>
+  <p>L信息技术服务公司（一般纳税人）符合增值税加计抵减政策（进项税额加计10%抵减应纳税额）。2026年9月，当月进项税额50万元，销项税额80万元，当月应交增值税30万元。加计抵减额 = 50万 × 10% = 5万元。</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">应交税费——未交增值税</td><td>借</td><td>300,000</td></tr>
+    <tr><td class="cr">银行存款</td><td>贷</td><td>250,000</td></tr>
+    <tr><td class="cr">其他收益</td><td>贷</td><td>50,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">实际缴纳时：按加计抵减后的净额25万缴税，加计抵减的5万计入其他收益。</p>
+</div>
+
+<div class="pb"></div>
+<h2>第二章 要点回顾</h2>
+<div class="diagram-box">
+  <p style="font-size:9.5pt; line-height:2.2; text-align:left;">
+    <strong>一、科目体系（10+10）</strong><br>
+    二级明细10个：应交增值税、未交增值税、预交增值税、待抵扣进项税额、待认证进项税额、待转销项税额、增值税留抵税额、简易计税、转让金融商品应交增值税、代扣代交增值税<br>
+    专栏10个（在应交增值税下）：进项税额、销项税额抵减、已交税金、转出未交增值税、减免税款、出口抵减内销产品应纳税额、销项税额、出口退税、进项税额转出、转出多交增值税<br><br>
+    <strong>二、关键分录流程</strong><br>
+    采购：发票未认证→待认证；认证后→进项税额<br>
+    销售：收入确认早→待转销项税额；纳税义务发生时→销项税额<br>
+    月末：应交未交→转出未交增值税→未交增值税（贷方）<br><br>
+    <strong>三、大公司特别注意</strong><br>
+    差额征税→销项税额抵减；进项转出→非正常损失/改变用途；留抵退税→不涉及损益；加计抵减→实缴时冲"未交增值税"，差额入"其他收益"
+  </p>
+</div>
+
+<!-- ================================================================== -->
+<!-- CHAPTER 3: CAS 16 - GOVERNMENT GRANTS -->
+<!-- ================================================================== -->
+<div class="chapter-cover">
+  <div class="chapter-number">03</div>
+  <div class="chapter-cover-title">企业会计准则第16号<br>——政府补助（修订）</div>
+  <div class="chapter-cover-meta">
+    <span>文号：财会[2017]15号</span><br>
+    <span>发布日期：2017年5月10日 | 施行日期：2017年6月12日</span><br>
+    <span>来源：财政部会计司 kjs.mof.gov.cn</span>
+  </div>
+  <div class="chapter-cover-line"></div>
+</div>
+
+<h1 id="c3s1">3.1　准则概览与核心概念</h1>
+
+<table class="overview-table">
+  <tr><th>准则文号</th><td>财会[2017]15号（修订版）</td></tr>
+  <tr><th>废止版本</th><td>财会[2006]3号中的CAS 16（2006版）</td></tr>
+  <tr><th>政府补助定义</th><td>企业从政府无偿取得货币性资产或非货币性资产</td></tr>
+  <tr><th>两大特征</th><td>①来源于政府的经济资源 ②无偿性（不需要交付商品或服务等对价）</td></tr>
+  <tr><th>分类</th><td>与资产相关的政府补助 / 与收益相关的政府补助</td></tr>
+  <tr><th>核心变化（2017修订）</th><td>①新增"其他收益"科目 ②允许净额法（冲减资产账面价值） ③明确与日常活动相关的计入其他收益 ④财政贴息明确两种方法</td></tr>
+</table>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>对账务会计最重要的变化——收入确认的分岔路口：</strong></p>
+  <p>① <strong>与日常活动相关</strong>（如增值税即征即退、稳岗补贴、研发补助）→ <span class="blue-highlight">计入"其他收益"</span>（在营业利润之上列报）</p>
+  <p>② <strong>与日常活动无关</strong>（如自然灾害补偿）→ <span class="blue-highlight">计入"营业外收入"</span></p>
+  <p><strong>需要排除的（不适用CAS 16）：</strong></p>
+  <p>① 与企业销售商品/提供服务密切相关的政府拨款（适用收入准则）</p>
+  <p>② 所得税减免（适用CAS 18所得税准则）</p>
+  <p>③ 政府以投资者身份投入的资本</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 3-1] 判断是否属于政府补助——增值税即征即退</div>
+  <p class="case-scene">业务场景：</p>
+  <p>M软件公司享受增值税即征即退政策，对实际税负超过3%的部分即征即退。2026年6月实际缴纳增值税45万元，经计算应退税额为21万元。7月10日收到退税款。</p>
+  <p><strong>判断：</strong>增值税即征即退属于政府补助（来源于政府、无偿性），与日常活动密切相关 → <span class="blue-highlight">计入其他收益</span>。</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">其他应收款——增值税退税款</td><td>借</td><td>210,000</td></tr>
+    <tr><td class="cr">其他收益</td><td>贷</td><td>210,000</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:#999;">（7月10日收到时：借：银行存款 21万，贷：其他应收款 21万）</td></tr>
+  </table>
+</div>
+
+<div class="pb"></div>
+<h1 id="c3s2">3.2　与资产相关的政府补助</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第8条</div>
+  <p><strong>第八条</strong>　与资产相关的政府补助，应当冲减相关资产的账面价值或确认为递延收益。与资产相关的政府补助确认为递延收益的，应当在相关资产使用寿命内按照合理、系统的方法分期计入损益。按照名义金额计量的政府补助，直接计入当期损益。相关资产在使用寿命结束前被出售、转让、报废或发生毁损的，应当将尚未分配的相关递延收益余额转入资产处置当期的损益。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>两种会计处理方法（企业可自选，但需一致运用）：</strong></p>
+  <p><strong>方法一：总额法</strong>——政府补助确认为"递延收益"，在资产使用寿命内分期转入"其他收益"。</p>
+  <p><strong>方法二：净额法</strong>——政府补助直接冲减相关资产的账面价值，后续按冲减后的账面价值计提折旧。优点是资产和折旧都变小了，利润表上没有直接的政府补助收益。</p>
+  <p><strong>如何选择？</strong>净额法更保守（资产和利润都小），总额法更透明（可以看到补助影响）。大公司通常选用总额法，因为能更清晰反映补助的真实规模。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 3-2] 与资产相关的政府补助——总额法 vs 净额法</div>
+  <p class="case-scene">业务场景：</p>
+  <p>N新能源公司2026年1月收到政府对光伏电站建设的补助资金600万元。光伏电站于2026年3月建成投入使用，入账总成本3,000万元，预计使用寿命20年，残值率5%，采用年限平均法折旧。</p>
+  <table class="entry-table">
+    <tr><th style="width:10%">方法</th><th style="width:40%">分录</th><th>方向</th><th>金额</th></tr>
+    <tr><td rowspan="4" style="text-align:center;font-weight:bold;">总额法</td><td colspan="3"><strong>收到补助：</strong></td></tr>
+    <tr><td class="dr">银行存款</td><td>借</td><td>6,000,000</td></tr>
+    <tr><td class="cr">递延收益</td><td>贷</td><td>6,000,000</td></tr>
+    <tr><td colspan="3" style="font-size:9pt;color:#666;">每年末转入其他收益 = 600万÷20 = 30万</td></tr>
+    <tr><td rowspan="3" style="text-align:center;font-weight:bold;">净额法</td><td class="dr">银行存款</td><td>借</td><td>6,000,000</td></tr>
+    <tr><td class="cr">固定资产</td><td>贷</td><td>6,000,000</td></tr>
+    <tr><td colspan="3" style="font-size:9pt;color:#666;">资产账面价值 = 3000-600 = 2400万；年折旧 = 2400×(1-5%)÷20=114万（vs 总额法年折旧142.5万）</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#c62828;"><strong>▲ 注意：</strong>净额法下，如果相关资产在补助之后才建成，且补助在资产建成前已收到，应先确认为递延收益，待资产建成后再冲减资产账面价值。</p>
+</div>
+
+<!-- 3.3 与收益相关的政府补助 -->
+<div class="pb"></div>
+<h1 id="c3s3">3.3　与收益相关的政府补助</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第9条、第11条</div>
+  <p><strong>第九条</strong>　与收益相关的政府补助，应当分情况按照以下规定进行会计处理：（一）用于补偿企业以后期间的相关成本费用或损失的，确认为递延收益，并在确认相关成本费用或损失的期间，计入当期损益或冲减相关成本；（二）用于补偿企业已发生的相关成本费用或损失的，直接计入当期损益或冲减相关成本。</p>
+  <p><strong>第十一条</strong>　与企业日常活动相关的政府补助，应当按照经济业务实质，计入其他收益或冲减相关成本费用。与企业日常活动无关的政府补助，应当计入营业外收支。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 3-3] 稳岗补贴——补偿已发生费用</div>
+  <p class="case-scene">业务场景：</p>
+  <p>P制造公司2025年度符合稳岗补贴政策条件，2026年4月收到人社局拨付的稳岗补贴120万元，用于补偿2025年度实际缴纳的社保费用（已计入2025年管理费用）。</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th><th>说明</th></tr>
+    <tr><td class="dr">银行存款</td><td>借</td><td>1,200,000</td><td></td></tr>
+    <tr><td class="cr">其他收益</td><td>贷</td><td>1,200,000</td><td>补偿已发生费用，直接计入当期损益</td></tr>
+  </table>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 3-4] 研发补助——补偿以后期间费用</div>
+  <p class="case-scene">业务场景：</p>
+  <p>Q医药公司2026年3月取得省级科技厅拨付的新药研发专项补助资金500万元，专项用于2026-2028年期间某创新药物的研发。该补助已通过项目评审，资金用途受限。</p>
+  <table class="entry-table">
+    <tr><th>时点</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td>2026.3<br>收到</td><td class="dr">银行存款</td><td>借</td><td>5,000,000</td></tr>
+    <tr><td></td><td class="cr">递延收益</td><td>贷</td><td>5,000,000</td></tr>
+    <tr><td>2026.12<br>年末</td><td colspan="3" style="font-size:9pt;color:#666;">假设2026年实际发生研发费用150万，按比例计入 = 500 × (150/500) = 150万</td></tr>
+    <tr><td></td><td class="dr">递延收益</td><td>借</td><td>1,500,000</td></tr>
+    <tr><td></td><td class="cr">其他收益</td><td>贷</td><td>1,500,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">后续年度按实际研发费用占预算总额的比例分期转入其他收益。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 3-5] 个税手续费返还</div>
+  <p class="case-scene">业务场景：</p>
+  <p>R集团公司2026年3月收到税务机关返还的个人所得税扣缴手续费18万元。公司计划将其中10万元奖励给办税人员。</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">银行存款</td><td>借</td><td>180,000</td></tr>
+    <tr><td class="cr">其他收益</td><td>贷</td><td>180,000</td></tr>
+    <tr><td colspan="3" style="font-size:9pt;color:#666;">（根据财会[2019]6号，个税手续费返还计入"其他收益"）</td></tr>
+    <tr><td colspan="3" style="font-size:9pt;color:#666;">奖励办税人员：借：其他应付款 10万，贷：银行存款 10万</td></tr>
+  </table>
+</div>
+
+<!-- 3.4 财政贴息与退回 -->
+<div class="pb"></div>
+<h1 id="c3s4">3.4　财政贴息与政府补助退回</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 第12-15条</div>
+  <p><strong>第十二条</strong>　企业取得政策性优惠贷款贴息的，应当区分财政将贴息资金拨付给贷款银行和财政将贴息资金直接拨付给企业两种情况。</p>
+  <p><strong>第十五条</strong>　已确认的政府补助需要退回的，应当在需要退回的当期分情况按照以下规定进行会计处理：（一）初始确认时冲减相关资产账面价值的，调整资产账面价值；（二）存在相关递延收益的，冲减相关递延收益账面余额，超出部分计入当期损益；（三）属于其他情况的，直接计入当期损益。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 3-6] 财政贴息——两种方法的对比</div>
+  <p class="case-scene">业务场景：</p>
+  <p>S环保公司2026年1月1日从银行借入3年期贷款1,000万元用于污水处理项目，合同年利率5%。该贷款属于财政贴息范围，财政局将贴息资金直接拨付给S公司，每年贴息金额为30万元（补贴3%的利率，企业实际负担2%）。</p>
+  <table class="entry-table">
+    <tr><th>方法</th><th>分录</th><th>方向</th><th>金额</th></tr>
+    <tr><td rowspan="2" style="text-align:center;font-weight:bold;">方法一<br>（冲减费用）</td><td class="dr">银行存款</td><td>借</td><td>300,000</td></tr>
+    <tr><td class="cr">财务费用——利息支出</td><td>贷</td><td>300,000</td></tr>
+    <tr><td rowspan="3" style="text-align:center;font-weight:bold;">方法二<br>（递延摊销）</td><td colspan="3" style="font-size:9pt;color:#666;">收到贴息30万时：</td></tr>
+    <tr><td class="dr">银行存款</td><td>借</td><td>300,000</td></tr>
+    <tr><td class="cr">递延收益</td><td>贷</td><td>300,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">方法一更为简洁，直接冲减借款费用；方法二需要后续摊销。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 3-7] 政府补助退回</div>
+  <p class="case-scene">业务场景：</p>
+  <p>T公司2025年获得政府技改补助200万元（总额法，确认为递延收益，按10年摊销，每年转入其他收益20万）。2026年末，因项目未达到约定的投资强度，被要求退回已收到的补助资金200万元。此时递延收益账面余额160万元（已摊销2年×20万）。</p>
+  <table class="entry-table">
+    <tr><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td class="dr">递延收益</td><td>借</td><td>1,600,000</td></tr>
+    <tr><td class="dr">营业外支出</td><td>借</td><td>400,000</td></tr>
+    <tr><td class="cr">银行存款</td><td>贷</td><td>2,000,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">先冲减递延收益余额160万，超出部分40万（即已转入损益的部分）计入当期损益（营业外支出）。</p>
+</div>
+
+<div class="pb"></div>
+<h2>第三章 要点回顾</h2>
+<div class="diagram-box">
+  <p style="font-size:9.5pt; line-height:2.2; text-align:left;">
+    <strong>一、判断三步法</strong><br>
+    ① 是否来源于政府？→ ② 是否无偿？→ ③ 是否适用收入准则/CAS 18/投资者投入？<br><br>
+    <strong>二、分类与列报</strong><br>
+    与资产相关 → 总额法（递延收益→分期转入其他收益）或净额法（冲减资产）<br>
+    与收益相关 → 日常活动→其他收益 / 非日常→营业外收入<br><br>
+    <strong>三、税会联动（与CAS 18的联系）</strong><br>
+    总额法下递延收益产生应纳税暂时性差异 → 确认递延所得税负债<br>
+    净额法下资产账面价值减少 → 可抵扣暂时性差异 → 确认递延所得税资产<br><br>
+    <strong>四、常见实操要点</strong><br>
+    增值税即征即退→其他收益；个税手续费返还→其他收益；稳岗补贴→其他收益；退回处理→先冲递延收益，超出部分→营业外支出
+  </p>
+</div>
+
+<!-- ================================================================== -->
+<!-- CHAPTER 4: INTERPRETATION NO. 19 -->
+<!-- ================================================================== -->
+<div class="chapter-cover">
+  <div class="chapter-number">04</div>
+  <div class="chapter-cover-title">企业会计准则解释第19号<br>（税务相关条款）</div>
+  <div class="chapter-cover-meta">
+    <span>文号：财会[2025]32号</span><br>
+    <span>发布日期：2025年12月5日 | 施行日期：2026年1月1日</span><br>
+    <span>来源：财政部会计司 m.mof.gov.cn</span>
+  </div>
+  <div class="chapter-cover-line"></div>
+</div>
+
+<h1 id="c4s1">4.1　补偿性资产概述与确认</h1>
+
+<table class="overview-table">
+  <tr><th>解释文号</th><td>财会[2025]32号</td></tr>
+  <tr><th>施行日期</th><td>2026年1月1日</td></tr>
+  <tr><th>与税务相关部分</th><td>一、非同一控制下企业合并中补偿性资产的会计处理（与递延所得税资产/负债的确认有关）</td></tr>
+  <tr><th>新增科目</th><td>"补偿性资产"（在"其他流动资产"/"其他非流动资产"列示）</td></tr>
+  <tr><th>适用范围</th><td>非同一控制下企业合并中，出售方对被购买方的或有事项/不确定性结果给予购买方的补偿</td></tr>
+</div>
+
+<div class="original-box">
+  <div class="label">[准则原文] 解释第19号 一、（一）</div>
+  <p>在非同一控制下企业合并中，出售方与购买方可能作出合同约定，针对被购买方某些或有事项，或者特定资产或负债的某些不确定性结果，出售方给予购买方补偿，购买方因此获得补偿性资产。</p>
+  <p><strong>合并财务报表层面：</strong>购买方在其合并财务报表中确认被补偿项目的同时，应当确认补偿性资产，以与被补偿项目相同的基础计量，并需考虑管理层对其可收回性的估计。</p>
+  <p><strong>特别关注——与递延所得税资产相关的补偿：</strong>当补偿与在购买日未以公允价值计量的被购买方资产（如被购买方的递延所得税资产）相关时，购买方应采用与该资产相同的基础，确认相应的补偿性资产。</p>
+</div>
+
+<div class="interpretation-box">
+  <div class="label">[白话解读]</div>
+  <p><strong>为什么大公司需要关注这个解释？</strong></p>
+  <p>在企业并购中，出售方经常对"补税风险"作出担保——比如被购买方历史期间存在税务瑕疵，出售方承诺若未来被追缴税款，由出售方承担。这就形成了一项<strong>"补偿性资产"</strong>。</p>
+  <p><strong>核心规则：</strong></p>
+  <p>① <strong>确认原则</strong>——跟被补偿项目走：被补偿项目确认了，补偿性资产才能确认（如同一枚硬币的两面）。</p>
+  <p>② <strong>计量原则</strong>——采用与被补偿项目<strong>相同的基础</strong>。例如，补偿的是递延所得税资产，那补偿性资产也按递延所得税资产的确认条件来计量。</p>
+  <p>③ <strong>后续计量</strong>——被补偿项目账面价值变了，补偿性资产也要跟着变，差额进投资收益。</p>
+  <p>④ <strong>可收回性评估</strong>——管理层需评估出售方是否有能力履行补偿义务。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 4-1] 补偿性资产——补税担保</div>
+  <p class="case-scene">业务场景：</p>
+  <p>甲公司（购买方）2026年3月以5,000万元取得乙公司100%股权（非同一控制下合并）。并购协议约定：出售方承诺，若乙公司在2026年3月前因历史税务问题被税务机关追缴税款，出售方将全额补偿甲公司。合并日，乙公司存在一项争议税务事项，涉及金额约200万元（不确定性较大，不符合预计负债确认条件）。2026年9月，税务机关正式通知追缴税款及滞纳金合计180万元，乙公司已缴纳。同时甲公司根据协议向出售方发出补偿通知。</p>
+  <table class="entry-table">
+    <tr><th>时点</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td rowspan="3">2026.9<br>被追缴</td><td class="dr">营业外支出 / 所得税费用</td><td>借</td><td>1,800,000</td></tr>
+    <tr><td class="cr">银行存款</td><td>贷</td><td>1,800,000</td></tr>
+    <tr><td colspan="3" style="font-size:9pt;color:#666;">被追缴税款——确认负债/费用</td></tr>
+    <tr><td rowspan="2">2026.9<br>同时确认<br>补偿性资产</td><td class="dr">其他应收款——补偿性资产</td><td>借</td><td>1,800,000</td></tr>
+    <tr><td class="cr">投资收益</td><td>贷</td><td>1,800,000</td></tr>
+    <tr><td rowspan="2">收到补偿</td><td class="dr">银行存款</td><td>借</td><td>1,800,000</td></tr>
+    <tr><td class="cr">其他应收款——补偿性资产</td><td>贷</td><td>1,800,000</td></tr>
+  </table>
+  <p style="font-size:9pt; color:#666;">（具体科目归属视追缴税种的会计处理而定；补偿性资产在"其他流动资产"列示）</p>
+</div>
+
+<div class="pb"></div>
+<h1 id="c4s2">4.2　补偿性资产的计量与个别报表处理</h1>
+
+<div class="original-box">
+  <div class="label">[准则原文] 解释第19号 一、（二）</div>
+  <p><strong>个别财务报表层面：</strong>购买方获得补偿性资产的，应当按照《企业会计准则第13号——或有事项》和本解释的规定进行会计处理。购买方在符合或有资产确认为资产的条件（即企业基本确定能够收到且其金额能够可靠计量）时，确认补偿性资产，同时冲减长期股权投资的初始投资成本。</p>
+</div>
+
+<div class="case-box">
+  <div class="label">[实战案例 4-2] 补偿性资产——个别报表与合并报表的不同处理</div>
+  <p class="case-scene">业务场景（接上例）：</p>
+  <p>甲公司个别财务报表对乙公司的长期股权投资初始成本为5,000万元。2026年9月税务机关追缴税款180万元，且甲公司基本确定能从出售方获得180万元补偿。</p>
+  <p><strong>个别财务报表处理：</strong></p>
+  <table class="entry-table">
+    <tr><th>报表层次</th><th>科目</th><th>方向</th><th>金额</th></tr>
+    <tr><td rowspan="2">个别报表</td><td class="dr">补偿性资产（其他流动资产）</td><td>借</td><td>1,800,000</td></tr>
+    <tr><td class="cr">长期股权投资</td><td>贷</td><td>1,800,000</td></tr>
+    <tr><td colspan="4" style="font-size:9pt;color:#666;">补偿性资产冲减长期股权投资成本（个别报表）</td></tr>
+    <tr><td rowspan="2">合并报表</td><td class="dr">补偿性资产</td><td>借</td><td>1,800,000</td></tr>
+    <tr><td class="cr">投资收益</td><td>贷</td><td>1,800,000</td></tr>
+    <tr><td colspan="4" style="font-size:9pt;color:#666;">合并报表中计入投资收益而非冲减长投</td></tr>
+  </table>
+</div>
+
+<div class="pb"></div>
+<h2>第四章 要点回顾</h2>
+<div class="diagram-box">
+  <p style="font-size:9.5pt; line-height:2.2; text-align:left;">
+    <strong>一、补偿性资产核心规则（2026年1月1日起施行）</strong><br>
+    · 确认前提：被补偿项目确认，补偿性资产方确认<br>
+    · 计量基础：与被补偿项目相同<br>
+    · 后续计量：被补偿项目变动 → 补偿性资产同步调整 → 差额入投资收益<br>
+    · 科目设置："补偿性资产"，在"其他流动资产"/"其他非流动资产"列示<br><br>
+    <strong>二、个别报表 vs 合并报表</strong><br>
+    个别报表：确认补偿性资产→冲减长期股权投资成本<br>
+    合并报表：确认补偿性资产→计入投资收益<br><br>
+    <strong>三、新旧衔接</strong><br>
+    首次执行日存在的补偿性资产 → 按会计政策变更追溯调整<br>
+    首次执行日前已收回/出售/丧失权利的 → 不再追溯调整
+  </p>
+</div>
+
+<!-- ================================================================== -->
+<!-- APPENDICES -->
+<!-- ================================================================== -->
+<div class="pb"></div>
+<h1 id="appA">附录A　常用税务会计分录速查表</h1>
+
+<table class="summary-table" style="font-size:9pt;">
+  <tr><th style="width:5%">序号</th><th style="width:25%">业务场景</th><th style="width:35%">借方</th><th style="width:35%">贷方</th></tr>
+  <tr>
+    <td>1</td>
+    <td>采购存货，专票已认证</td>
+    <td>原材料/库存商品<br>应交税费—应交增值税(进项税额)</td>
+    <td>银行存款/应付账款</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>采购存货，专票未认证</td>
+    <td>原材料/库存商品<br>应交税费—待认证进项税额</td>
+    <td>银行存款/应付账款</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>认证上月未认证发票</td>
+    <td>应交税费—应交增值税(进项税额)</td>
+    <td>应交税费—待认证进项税额</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>销售货物</td>
+    <td>银行存款/应收账款</td>
+    <td>主营业务收入<br>应交税费—应交增值税(销项税额)</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>收入确认早于纳税义务</td>
+    <td>应收账款</td>
+    <td>主营业务收入<br>应交税费—待转销项税额</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>纳税义务发生时</td>
+    <td>应交税费—待转销项税额</td>
+    <td>应交税费—应交增值税(销项税额)</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>进项税额不得抵扣转出</td>
+    <td>相关成本/费用科目</td>
+    <td>应交税费—应交增值税(进项税额转出)</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>非正常损失—存货毁损</td>
+    <td>待处理财产损溢</td>
+    <td>原材料<br>应交税费—应交增值税(进项税额转出)</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>差额征税—销项税额抵减</td>
+    <td>应交税费—应交增值税(销项税额抵减)</td>
+    <td>主营业务成本</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>月末转出应交未交增值税</td>
+    <td>应交税费—应交增值税(转出未交)</td>
+    <td>应交税费—未交增值税</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>实际缴纳增值税</td>
+    <td>应交税费—未交增值税</td>
+    <td>银行存款</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>预缴增值税</td>
+    <td>应交税费—预交增值税</td>
+    <td>银行存款</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>收到留抵退税</td>
+    <td>银行存款</td>
+    <td>应交税费—增值税留抵税额</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>加计抵减（实际缴纳时）</td>
+    <td>应交税费—未交增值税</td>
+    <td>银行存款<br>其他收益（加计抵减部分）</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>直接减免增值税</td>
+    <td>应交税费—应交增值税(减免税款)</td>
+    <td>其他收益</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>确认递延所得税负债</td>
+    <td>所得税费用</td>
+    <td>递延所得税负债</td>
+  </tr>
+  <tr>
+    <td>17</td>
+    <td>确认递延所得税资产</td>
+    <td>递延所得税资产</td>
+    <td>所得税费用</td>
+  </tr>
+  <tr>
+    <td>18</td>
+    <td>税率变动重计量递延所得税</td>
+    <td>所得税费用（或贷方）</td>
+    <td>递延所得税负债/资产（或借方）</td>
+  </tr>
+  <tr>
+    <td>19</td>
+    <td>递延所得税资产减值</td>
+    <td>所得税费用</td>
+    <td>递延所得税资产</td>
+  </tr>
+  <tr>
+    <td>20</td>
+    <td>收到与资产相关政府补助（总额法）</td>
+    <td>银行存款</td>
+    <td>递延收益</td>
+  </tr>
+  <tr>
+    <td>21</td>
+    <td>摊销递延收益（总额法）</td>
+    <td>递延收益</td>
+    <td>其他收益</td>
+  </tr>
+  <tr>
+    <td>22</td>
+    <td>收到与收益相关政府补助（补偿已发生）</td>
+    <td>银行存款</td>
+    <td>其他收益</td>
+  </tr>
+  <tr>
+    <td>23</td>
+    <td>政府补助退回（有递延收益余额）</td>
+    <td>递延收益<br>营业外支出（超出部分）</td>
+    <td>银行存款</td>
+  </tr>
+  <tr>
+    <td>24</td>
+    <td>增值税即征即退</td>
+    <td>其他应收款</td>
+    <td>其他收益</td>
+  </tr>
+  <tr>
+    <td>25</td>
+    <td>个税手续费返还</td>
+    <td>银行存款</td>
+    <td>其他收益</td>
+  </tr>
+  <tr>
+    <td>26</td>
+    <td>补偿性资产确认（合并报表）</td>
+    <td>补偿性资产</td>
+    <td>投资收益</td>
+  </tr>
+  <tr>
+    <td>27</td>
+    <td>补偿性资产确认（个别报表）</td>
+    <td>补偿性资产</td>
+    <td>长期股权投资</td>
+  </tr>
+</table>
+
+<!-- Appendix B -->
+<div class="pb"></div>
+<h1 id="appB">附录B　税会差异常见类型对照表</h1>
+
+<table class="summary-table" style="font-size:8.5pt;">
+  <tr><th style="width:3%">序号</th><th style="width:15%">差异项目</th><th style="width:14%">会计处理</th><th style="width:14%">税务处理</th><th style="width:9%">差异类型</th><th style="width:9%">暂时性/<br>永久性</th><th style="width:16%">递延所得税影响</th><th style="width:20%">大公司常见场景</th></tr>
+  <tr>
+    <td>1</td>
+    <td>固定资产折旧</td>
+    <td>年限平均法/工作量法等</td>
+    <td>加速折旧（一次性扣除/缩短年限）</td>
+    <td>应纳税</td>
+    <td>暂时性</td>
+    <td>确认递延所得税负债</td>
+    <td>制造业设备500万以下一次性扣除</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>坏账准备</td>
+    <td>按预期信用损失计提</td>
+    <td>实际发生时扣除</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>应收账款、其他应收款</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>存货跌价准备</td>
+    <td>按成本与可变现净值孰低计提</td>
+    <td>实际发生时扣除</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>原材料、库存商品</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>固定资产减值准备</td>
+    <td>按可收回金额低于账面价值部分计提</td>
+    <td>不允许扣除</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>长期资产减值测试</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>预计负债（质保）</td>
+    <td>按最佳估计数确认</td>
+    <td>实际发生时扣除</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>产品质保、未决诉讼</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>可抵扣亏损</td>
+    <td>确认递延所得税资产（条件满足时）</td>
+    <td>5年内弥补（高新10年）</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>初创期/亏损子公司</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>公允价值变动损益</td>
+    <td>计入当期损益</td>
+    <td>实际处置时确认</td>
+    <td>应纳税</td>
+    <td>暂时性</td>
+    <td>确认递延所得税负债</td>
+    <td>交易性金融资产</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>业务招待费超支</td>
+    <td>全额计入管理费用</td>
+    <td>发生额60%与营收5‰孰低</td>
+    <td>-</td>
+    <td>永久性</td>
+    <td>不确认递延所得税</td>
+    <td>差旅招待报销</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>罚款/滞纳金</td>
+    <td>计入营业外支出</td>
+    <td>不允许扣除</td>
+    <td>-</td>
+    <td>永久性</td>
+    <td>不确认递延所得税</td>
+    <td>税务罚款、环保罚款</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>研发费用加计扣除</td>
+    <td>据实列支</td>
+    <td>100%加计扣除（形成无形资产200%摊销）</td>
+    <td>可抵扣</td>
+    <td>永久性</td>
+    <td>不确认递延所得税</td>
+    <td>高新企业研发</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>国债利息收入</td>
+    <td>计入投资收益</td>
+    <td>免税</td>
+    <td>-</td>
+    <td>永久性</td>
+    <td>不确认递延所得税</td>
+    <td>持有国债</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>权益法核算长投</td>
+    <td>按被投资方净利润确认投资收益</td>
+    <td>实际分红时确认</td>
+    <td>应纳税</td>
+    <td>暂时性</td>
+    <td>确认递延所得税负债（除非控制转回时间）</td>
+    <td>对联营/合营企业投资</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>应付职工薪酬</td>
+    <td>按权责发生制计提</td>
+    <td>实际发放时扣除（合理部分）</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>年终奖跨年发放</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>递延收益（政府补助）</td>
+    <td>确认为负债，分期转入损益</td>
+    <td>收到时计入应税收入</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>与资产相关的政府补助</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>预提费用</td>
+    <td>按权责发生制预提</td>
+    <td>实际支付时扣除</td>
+    <td>可抵扣</td>
+    <td>暂时性</td>
+    <td>确认递延所得税资产</td>
+    <td>租金、利息、水电费</td>
+  </tr>
+</table>
+
+<!-- Appendix C -->
+<div class="pb"></div>
+<h1 id="appC">附录C　准则官方来源索引</h1>
+
+<table class="overview-table" style="font-size:9pt;">
+  <tr><th style="width:28%">准则名称</th><th style="width:15%">文号</th><th style="width:12%">施行日期</th><th style="width:45%">官方来源URL（财政部会计司）</th></tr>
+  <tr>
+    <td>企业会计准则第18号——所得税</td>
+    <td>财会[2006]3号</td>
+    <td>2007-01-01</td>
+    <td style="font-size:8pt;">https://kjs.mof.gov.cn/zt/kjzzss/kuaijizhunzeshishi/200806/t20080618_46230.htm</td>
+  </tr>
+  <tr>
+    <td>增值税会计处理规定</td>
+    <td>财会[2016]22号</td>
+    <td>2016-12-03</td>
+    <td style="font-size:8pt;">https://kjs.mof.gov.cn/zhengcefabu/201612/P020161212572651599508.pdf</td>
+  </tr>
+  <tr>
+    <td>《增值税会计处理规定》解读</td>
+    <td>-</td>
+    <td>2017-01-26</td>
+    <td style="font-size:8pt;">https://kjs.mof.gov.cn/zhengcejiedu/201701/t20170126_2528187.htm</td>
+  </tr>
+  <tr>
+    <td>企业会计准则第16号——政府补助（修订）</td>
+    <td>财会[2017]15号</td>
+    <td>2017-06-12</td>
+    <td style="font-size:8pt;">https://m.mof.gov.cn/czxw/201705/t20170525_2608690.htm</td>
+  </tr>
+  <tr>
+    <td>CAS 16 政府补助应用指南（2018）</td>
+    <td>-</td>
+    <td>2018</td>
+    <td style="font-size:8pt;">https://kjs.mof.gov.cn/（财政部会计司搜索）</td>
+  </tr>
+  <tr>
+    <td>企业会计准则解释第19号</td>
+    <td>财会[2025]32号</td>
+    <td>2026-01-01</td>
+    <td style="font-size:8pt;">https://m.mof.gov.cn/zcfb/202512/t20251218_3979556.htm</td>
+  </tr>
+  <tr>
+    <td>企业会计准则解释第20号</td>
+    <td>财会[2026]</td>
+    <td>2026-06-04</td>
+    <td style="font-size:8pt;">https://kjs.mof.gov.cn/zhengcefabu/202606/t20260615_3991686.htm</td>
+  </tr>
+  <tr>
+    <td>财政部会计司实施问答（政府补助）</td>
+    <td>-</td>
+    <td>2025-2026</td>
+    <td style="font-size:8pt;">https://www.mof.gov.cn/bd/mhwzzxly/hjs/（搜索"政府补助"）</td>
+  </tr>
+  <tr>
+    <td>财政部会计司实施问答（所得税）</td>
+    <td>-</td>
+    <td>2022</td>
+    <td style="font-size:8pt;">https://kjs.mof.gov.cn/（搜索"所得税"、"企业会计准则实施问答"）</td>
+  </tr>
+  <tr>
+    <td>财政部会计司——准则解释汇总</td>
+    <td>-</td>
+    <td>持续更新</td>
+    <td style="font-size:8pt;">https://kjs.mof.gov.cn/zhengcefabu/</td>
+  </tr>
+</table>
+
+<p style="margin-top:1cm; text-align:center; color:#999; font-size:9pt;">
+  — 本文档所有准则内容均来源于中华人民共和国财政部官方网站（kjs.mof.gov.cn）—<br>
+  — 解读与案例为基于准则原文的实务理解，具体会计处理请以财政部官方解释为准 —
+</p>
+
+</body>
+</html>
